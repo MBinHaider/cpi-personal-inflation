@@ -1,7 +1,7 @@
 import { Lightbulb, Home, UtensilsCrossed, Fuel, Wifi, Car, Sparkles, TrendingDown, Zap, Smartphone, GraduationCap, PiggyBank, Shirt } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import type { CpiResult, Recommendation, RecCategory } from '../../lib/types';
-import { interpolate } from '../../lib/format';
+import { formatNumber, interpolate } from '../../lib/format';
 
 interface Props { result: CpiResult; }
 
@@ -24,7 +24,7 @@ const RULE_ICON_OVERRIDE: Record<string, React.ReactNode> = {
 };
 
 export function Recommendations({ result }: Props) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   if (result.recommendations.length === 0) return null;
   return (
     <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-5">
@@ -33,18 +33,21 @@ export function Recommendations({ result }: Props) {
       </h3>
       <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">{t('result.rec.sub')}</p>
       <div className="flex flex-col gap-2.5">
-        {result.recommendations.map(r => <Card key={r.id} rec={r} t={t} />)}
+        {result.recommendations.map(r => <Card key={r.id} rec={r} t={t} language={language} />)}
       </div>
     </div>
   );
 }
 
-function Card({ rec, t }: { rec: Recommendation; t: (k: string) => string }) {
+function Card({ rec, t, language }: { rec: Recommendation; t: (k: string) => string; language: 'en' | 'ar' }) {
   const icon = RULE_ICON_OVERRIDE[rec.id] ?? CAT_ICON[rec.category];
   const isEasyWin = rec.priority === 'easy-win';
   const isInfo = rec.savingLow === 0 && rec.savingHigh === 0;
   const savingKey = isEasyWin ? 'result.rec.easywin' : 'result.rec.saving';
-  const savingText = interpolate(t(savingKey), { low: rec.savingLow, high: rec.savingHigh });
+  const savingText = interpolate(t(savingKey), {
+    low: formatNumber(rec.savingLow, language),
+    high: formatNumber(rec.savingHigh, language),
+  });
   return (
     <div className="flex gap-3.5 p-4 bg-gray-50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-700 rounded-xl hover:border-[#0066cc] transition-colors">
       <div className="w-9 h-9 rounded-lg bg-[#0066cc] text-white flex items-center justify-center shrink-0">
