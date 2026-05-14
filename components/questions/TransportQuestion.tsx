@@ -17,7 +17,7 @@ export function TransportQuestion({ stepIndex, stepCount, value, onAnswer, onBac
   return (
     <QuestionScreen
       stepIndex={stepIndex} stepCount={stepCount}
-      questionNumberLabel="Question 5"
+
       title={t('q5.title')} sub={t('q5.sub')}
       onBack={onBack}
       onNext={value ? () => onAnswer(value) : undefined}

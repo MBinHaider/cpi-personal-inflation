@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Users, Baby, Plus, Minus, UsersRound } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
+import { formatNumber } from '../../lib/format';
 import { QuestionScreen } from '../QuestionScreen';
 import type { Household } from '../../lib/types';
 
@@ -16,7 +17,7 @@ interface Props {
 }
 
 export function HouseholdQuestion({ stepIndex, stepCount, value, onAnswer, onBack }: Props) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [adults, setAdults] = useState(value?.adults ?? 2);
   const [kids, setKids] = useState(value?.kids ?? 0);
 
@@ -25,15 +26,15 @@ export function HouseholdQuestion({ stepIndex, stepCount, value, onAnswer, onBac
   }, [value]);
 
   const summary = t('q4.summary')
-    .replace('{adults}', String(adults))
-    .replace('{kids}', String(kids))
-    .replace('{total}', String(adults + kids));
+    .replace('{adults}', formatNumber(adults, language))
+    .replace('{kids}', formatNumber(kids, language))
+    .replace('{total}', formatNumber(adults + kids, language));
 
   return (
     <QuestionScreen
       stepIndex={stepIndex}
       stepCount={stepCount}
-      questionNumberLabel="Question 4"
+
       title={t('q4.title')}
       sub={t('q4.sub')}
       onBack={onBack}

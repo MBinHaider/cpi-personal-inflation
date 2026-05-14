@@ -1,6 +1,7 @@
 import { BarChart2, Home, Car, UtensilsCrossed, Apple, Shirt, HeartPulse, Smartphone, GraduationCap, Wine, Sofa, Landmark } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import type { CpiResult } from '../../lib/types';
+import { formatPercent, formatNumber } from '../../lib/format';
 
 interface Props { result: CpiResult; }
 
@@ -31,7 +32,10 @@ export function TopDrivers({ result }: Props) {
         {result.drivers.map(d => {
           const name = language === 'ar' ? d.divisionName_ar : d.divisionName_en;
           const negative = d.contributionPp < 0;
-          const sharePct = Math.round(d.shareOfTotal * 100);
+          const basketPct = Math.round(d.basketPct * 100);
+          const shareMeta = t('result.drivers.shareMeta')
+            .replace('{share}', formatPercent(basketPct, language, 0, 'never'))
+            .replace('{yoy}', formatPercent(d.yoy, language));
           return (
             <div key={d.divisionId} className="flex items-center gap-3 py-3 border-b border-gray-100 dark:border-slate-700 last:border-b-0">
               <div className="w-9 h-9 rounded-lg bg-[#e8f2ff] text-[#0066cc] flex items-center justify-center shrink-0">
@@ -40,18 +44,18 @@ export function TopDrivers({ result }: Props) {
               <div className="flex-1 min-w-0">
                 <div className="text-[13px] font-semibold text-gray-900 dark:text-gray-100 truncate">{name}</div>
                 <div className="text-[11px] text-gray-500 dark:text-gray-400">
-                  {Math.round(d.basketPct * 100)}% of your basket · YoY {d.yoy >= 0 ? '+' : ''}{d.yoy.toFixed(1)}%
+                  {shareMeta}
                 </div>
               </div>
               <div className="text-end shrink-0">
                 <div className={[
-                  'text-sm font-semibold ltr-numbers',
+                  'text-sm font-semibold',
                   negative ? 'text-[#10b981]' : 'text-[#ef4444]',
                 ].join(' ')}>
-                  {d.contributionPp >= 0 ? '+' : ''}{d.contributionPp.toFixed(2)}pp
+                  {formatNumber(d.contributionPp, language, { minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: 'always' })}pp
                 </div>
-                <div className="text-[11px] text-gray-500 dark:text-gray-400 ltr-numbers">
-                  {negative ? t('result.drivers.offset') : t('result.drivers.share').replace('{share}', String(sharePct))}
+                <div className="text-[11px] text-gray-500 dark:text-gray-400">
+                  {negative ? t('result.drivers.offset') : t('result.drivers.share').replace('{share}', formatPercent(d.shareOfTotal * 100, language, 0, 'never'))}
                 </div>
               </div>
             </div>

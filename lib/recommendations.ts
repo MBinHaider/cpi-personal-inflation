@@ -1,7 +1,7 @@
 import type {
   QuizAnswers, CpiResult, CpiItemsData, Profiles, Recommendation,
 } from './types';
-import { RULES, type RuleContext } from './recommendations.rules';
+import { RULES, FALLBACK_POOL, type RuleContext } from './recommendations.rules';
 
 export type TranslateFn = (key: string, tokens?: Record<string, string | number>) => string;
 
@@ -68,7 +68,6 @@ export function generateRecommendations(
     const why = interpolate(t(`rec.${m.rule.id}.why`), {
       rentPct: Math.round(rentPctOfIncome * 100),
       restaurantPct: Math.round(restaurantPctOfIncome * 100),
-      yoy: result.personalYoy.toFixed(2),
       savingLow: m.saving.low,
       savingHigh: m.saving.high,
     });
@@ -94,6 +93,34 @@ export function generateRecommendations(
   for (const m of [...standardSlots, ...easyWinSlot]) {
     if (out.length >= 4) break;
     if (!out.some(o => o.id === m.rule.id)) add(m);
+  }
+
+  // Fallback pool: if still fewer than 4, surface fallback rules unconditionally
+  // (bypassing both trigger and per-category cap) so every profile gets at least 4.
+  if (out.length < 4) {
+    for (const fallbackId of FALLBACK_POOL) {
+      if (out.length >= 4) break;
+      if (out.some(o => o.id === fallbackId)) continue;
+      const rule = RULES.find(r => r.id === fallbackId);
+      if (!rule) continue;
+      const saving = rule.estimateSaving(ctx);
+      const title = t(`rec.${rule.id}.title`);
+      const why = interpolate(t(`rec.${rule.id}.why`), {
+        rentPct: Math.round(rentPctOfIncome * 100),
+        restaurantPct: Math.round(restaurantPctOfIncome * 100),
+        savingLow: saving.low,
+        savingHigh: saving.high,
+      });
+      out.push({
+        id: rule.id,
+        category: rule.category,
+        priority: rule.priority,
+        title,
+        why,
+        savingLow: saving.low,
+        savingHigh: saving.high,
+      });
+    }
   }
 
   return out;

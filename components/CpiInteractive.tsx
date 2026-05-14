@@ -1,83 +1,113 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useState, useCallback } from 'react';
 import { PageShell } from '@shared/components/PageShell';
 import { Header } from '@shared/components/Header';
+import { KpiCard } from '@shared/components/KpiCard';
 import { useLanguage } from '@shared/contexts/LanguageContext';
-import { Welcome } from './Welcome';
-import { Wizard } from './Wizard';
-import { LoadingTransition } from './LoadingTransition';
-import { ResultPage } from './result/ResultPage';
-import { useQuizState, STORAGE_KEY } from '../hooks/useQuizState';
-import { computeCpiWithRecommendations } from '../lib/calc';
-import { profiles } from '../lib/profiles';
-import cpiItems from '../data/cpi-items.json';
-import type { CpiItemsData, QuizAnswers, CpiResult } from '../lib/types';
+import { usePersonalCpi } from '../hooks/usePersonalCpi';
+import { HeroSection } from './HeroSection';
+import { ItemSelector } from './ItemSelector';
+import { PersonalTrendChart } from './PersonalTrendChart';
+import { TopImpactItems } from './TopImpactItems';
+import cpiItemsRaw from '../data/cpi-items.json';
+import cpiMonthlyData from '../data/cpi-monthly.json';
 
-type View = 'welcome' | 'wizard' | 'loading' | 'result';
+interface CpiItem {
+  id: string;
+  name_en: string;
+  name_ar: string;
+  price_aed: number;
+  mom_change: number;
+  yoy_change: number;
+  weight: number;
+  selected: boolean;
+}
 
-const items = cpiItems as CpiItemsData;
+interface Division {
+  id: string;
+  name_en: string;
+  name_ar: string;
+  weight: number;
+  items: CpiItem[];
+}
 
-function readPersistedAnswers(): QuizAnswers | null {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (!raw) return null;
-    const parsed = JSON.parse(raw);
-    if (parsed?.version !== 1) return null;
-    const a = parsed.answers;
-    if (a?.nationality && a?.income && a?.housing && a?.household && a?.transport && a?.eatingOut && a?.schooling != null) {
-      return { ...a, version: 1, completedAt: parsed.completedAt ?? new Date().toISOString(), language: a.language ?? 'en' };
-    }
-  } catch {}
-  return null;
+// Deep clone the JSON data to make it mutable state
+function cloneDivisions(raw: typeof cpiItemsRaw.divisions): Division[] {
+  return raw.map(div => ({
+    ...div,
+    items: div.items.map(item => ({ ...item })),
+  }));
 }
 
 export function CpiInteractive() {
-  const { t, language } = useLanguage();
-  const initial = useMemo(() => readPersistedAnswers(), []);
-  const [view, setView] = useState<View>(initial ? 'result' : 'welcome');
-  const [answers, setAnswers] = useState<QuizAnswers | null>(initial);
-  const [wizardStartStep, setWizardStartStep] = useState<number | undefined>(undefined);
+  const { t } = useLanguage();
+  const [divisions, setDivisions] = useState<Division[]>(() => cloneDivisions(cpiItemsRaw.divisions));
 
-  const result: CpiResult | null = useMemo(() => {
-    if (!answers) return null;
-    return computeCpiWithRecommendations(answers, items, profiles, t);
-  }, [answers, t, language]);
+  const officialYoy = cpiItemsRaw.officialCpi.yoyChange;
+  const officialMom = cpiItemsRaw.officialCpi.momChange;
 
-  const handleStart = useCallback(() => {
-    setWizardStartStep(0);
-    setView('wizard');
+  const { personalYoy, personalMom, difference, topImpactItems } = usePersonalCpi(divisions, officialYoy);
+
+  const handleToggleItem = useCallback((itemId: string) => {
+    setDivisions(prev =>
+      prev.map(div => ({
+        ...div,
+        items: div.items.map(item =>
+          item.id === itemId ? { ...item, selected: !item.selected } : item
+        ),
+      }))
+    );
   }, []);
 
-  const handleWizardComplete = useCallback((a: QuizAnswers) => {
-    setAnswers(a);
-    setView('loading');
-  }, []);
+  const formatCpi = (val: number) => `${val > 0 ? '+' : ''}${val.toFixed(2)}%`;
+  const formatChange = (val: number) => `${val > 0 ? '+' : ''}${val.toFixed(2)}% MoM`;
 
-  const handleLoadingDone = useCallback(() => setView('result'), []);
-  const handleEdit = useCallback(() => { setWizardStartStep(0); setView('wizard'); }, []);
-  const handleRetake = useCallback(() => {
-    try { localStorage.removeItem(STORAGE_KEY); } catch {}
-    setAnswers(null);
-    setWizardStartStep(0);
-    setView('welcome');
-  }, []);
-
-  // Refresh result when language changes (for recommendation text)
-  useEffect(() => {/* memo dep already covers */}, [language]);
+  const differenceDirection: 'up' | 'down' | 'neutral' =
+    difference > 0 ? 'up' : difference < 0 ? 'down' : 'neutral';
 
   return (
     <PageShell>
-      <Header title="CPI Interactive" subtitle="Dubai" />
-      <div className="px-6 pb-10 pt-2 max-w-[1100px] mx-auto">
-        {view === 'welcome' && <Welcome onStart={handleStart} />}
-        {view === 'wizard' && (
-          <Wizard onComplete={handleWizardComplete} startStep={wizardStartStep} key={wizardStartStep ?? 'fresh'} />
-        )}
-        {view === 'loading' && (
-          <LoadingTransition onDone={handleLoadingDone} previewYoy={result?.personalYoy} />
-        )}
-        {view === 'result' && answers && result && (
-          <ResultPage answers={answers} result={result} onEdit={handleEdit} onRetake={handleRetake} />
-        )}
+      <Header title="CPI" subtitle="Interactive" />
+
+      <HeroSection />
+
+      {/* KPI Strip */}
+      <div className="px-6 pb-4 grid grid-cols-3 gap-4">
+        <KpiCard
+          label={t('kpi.personalCpi')}
+          value={formatCpi(personalYoy)}
+          change={formatChange(personalMom)}
+          changeDirection={personalMom > 0 ? 'up' : personalMom < 0 ? 'down' : 'neutral'}
+          variant="primary"
+        />
+        <KpiCard
+          label={t('kpi.officialCpi')}
+          value={formatCpi(officialYoy)}
+          change={formatChange(officialMom)}
+          changeDirection={officialMom > 0 ? 'up' : 'neutral'}
+        />
+        <KpiCard
+          label={t('kpi.difference')}
+          value={`${difference > 0 ? '+' : ''}${difference.toFixed(2)}pp`}
+          change={difference > 0 ? 'You pay more than average' : difference < 0 ? 'You pay less than average' : 'In line with average'}
+          changeDirection={differenceDirection}
+        />
+      </div>
+
+      {/* Two-column layout */}
+      <div className="px-6 pb-8 flex gap-4 items-start">
+        {/* Left: Item Selector — 45% */}
+        <div className="w-[45%] flex-shrink-0">
+          <ItemSelector divisions={divisions} onToggleItem={handleToggleItem} />
+        </div>
+
+        {/* Right: Chart + Impact — 55% */}
+        <div className="flex-1 flex flex-col gap-4 min-w-0">
+          <PersonalTrendChart
+            monthlyData={cpiMonthlyData.months}
+            personalYoy={personalYoy}
+          />
+          <TopImpactItems items={topImpactItems} />
+        </div>
       </div>
     </PageShell>
   );

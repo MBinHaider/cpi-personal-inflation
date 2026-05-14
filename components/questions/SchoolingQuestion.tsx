@@ -27,7 +27,7 @@ export function SchoolingQuestion({ stepIndex, stepCount, nationality, value, on
     <QuestionScreen
       stepIndex={stepIndex}
       stepCount={stepCount}
-      questionNumberLabel="Question 7"
+
       title={t('q7.title')}
       sub={isEmirati ? t('q7.emirati.sub') : t('q7.expat.sub')}
       onBack={onBack}

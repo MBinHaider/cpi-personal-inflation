@@ -20,6 +20,11 @@ export interface ExpatHousing {
 
 export type Housing = EmiratiHousing | ExpatHousing;
 
+/** Returns true when the household is a renter (has a rent bracket or is an Emirati who chose 'rent'). */
+export function isRenterHousing(housing: Housing): boolean {
+  return housing.rentBracket !== undefined || housing.kind === 'rent';
+}
+
 export interface Household {
   adults: number;   // 1..8
   kids: number;     // 0..8

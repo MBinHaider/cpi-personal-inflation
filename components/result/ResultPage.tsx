@@ -2,6 +2,7 @@ import { RotateCcw, Pencil, Share2 } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import monthlyData from '../../data/cpi-monthly.json';
 import type { CpiResult, QuizAnswers } from '../../lib/types';
+import { formatMonthYearLong } from '../../lib/format';
 import { Hero } from './Hero';
 import { AnswersChips } from './AnswersChips';
 import { GapDecomposition } from './GapDecomposition';
@@ -17,15 +18,14 @@ interface Props {
   onEdit: () => void;
 }
 
-function lastMonthLabel(): string {
-  const last = monthlyData.months[monthlyData.months.length - 1]?.date;
-  if (!last) return '';
-  const [y, m] = last.split('-');
-  return new Date(Number(y), Number(m) - 1, 1).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-}
-
 export function ResultPage({ answers, result, onRetake, onEdit }: Props) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const lastDate = (() => {
+    const last = monthlyData.months[monthlyData.months.length - 1]?.date;
+    if (!last) return '';
+    const [y, m] = last.split('-');
+    return formatMonthYearLong(new Date(Number(y), Number(m) - 1, 1), language);
+  })();
   return (
     <div className="flex flex-col gap-4">
       <div>
@@ -33,11 +33,11 @@ export function ResultPage({ answers, result, onRetake, onEdit }: Props) {
         <p className="text-sm text-gray-500 dark:text-gray-400 mb-5">{t('result.sub')}</p>
         <AnswersChips answers={answers} onEdit={onEdit} />
       </div>
-      <Hero result={result} />
+      <Hero result={result} answers={answers} />
       <GapDecomposition result={result} />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <TopDrivers result={result} />
-        <AffordabilitySnapshot result={result} />
+        <AffordabilitySnapshot result={result} onEdit={onEdit} />
       </div>
       <Recommendations result={result} />
       <TrendChart personalYoy={result.personalYoy} />
@@ -56,7 +56,7 @@ export function ResultPage({ answers, result, onRetake, onEdit }: Props) {
 
       <div className="border-t border-gray-200 dark:border-slate-700 pt-4 mt-2 text-[11px] text-gray-500 dark:text-gray-400 flex justify-between flex-wrap gap-2">
         <span>{t('result.footer.source')}</span>
-        <span>{t('result.footer.updated').replace('{month}', lastMonthLabel())}</span>
+        <span>{t('result.footer.updated').replace('{month}', lastDate)}</span>
       </div>
     </div>
   );

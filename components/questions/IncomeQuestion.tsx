@@ -27,7 +27,7 @@ export function IncomeQuestion({ stepIndex, stepCount, value, onAnswer, onBack }
     <QuestionScreen
       stepIndex={stepIndex}
       stepCount={stepCount}
-      questionNumberLabel="Question 2"
+
       title={t('q2.title')}
       sub={t('q2.sub')}
       onBack={onBack}

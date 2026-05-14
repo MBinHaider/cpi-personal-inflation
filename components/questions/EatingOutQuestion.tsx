@@ -17,7 +17,7 @@ export function EatingOutQuestion({ stepIndex, stepCount, value, onAnswer, onBac
   return (
     <QuestionScreen
       stepIndex={stepIndex} stepCount={stepCount}
-      questionNumberLabel="Question 6"
+
       title={t('q6.title')} sub={t('q6.sub')}
       onBack={onBack}
       onNext={value ? () => onAnswer(value) : undefined}

@@ -47,7 +47,6 @@ export function HousingQuestion({ stepIndex, stepCount, nationality, value, onAn
         <QuestionScreen
           stepIndex={stepIndex}
           stepCount={stepCount}
-          questionNumberLabel="Question 3"
           title={t('q3.expat.title')}
           sub={t('q3.expat.sub')}
           onBack={() => setEmiratiKind(undefined)}
@@ -68,7 +67,6 @@ export function HousingQuestion({ stepIndex, stepCount, nationality, value, onAn
       <QuestionScreen
         stepIndex={stepIndex}
         stepCount={stepCount}
-        questionNumberLabel="Question 3"
         title={t('q3.emirati.title')}
         sub={t('q3.emirati.sub')}
         onBack={onBack}
@@ -95,7 +93,6 @@ export function HousingQuestion({ stepIndex, stepCount, nationality, value, onAn
     <QuestionScreen
       stepIndex={stepIndex}
       stepCount={stepCount}
-      questionNumberLabel="Question 3"
       title={t('q3.expat.title')}
       sub={t('q3.expat.sub')}
       onBack={onBack}

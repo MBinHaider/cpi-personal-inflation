@@ -26,6 +26,19 @@ const PETROL = '07-01';
 const INTERNET = '08-02';
 const MOBILE = '08-01';
 
+/**
+ * Ordered fallback pool — IDs surface unconditionally when fewer than 4
+ * recommendations survive the diversity guard.  Entries are easy-win rules
+ * that are useful to almost any profile (utilities review, deflation tips).
+ * IDs must match existing Rule.id values so their text/savings copy is reused.
+ */
+export const FALLBACK_POOL: ReadonlyArray<string> = [
+  'mobile-deflating',
+  'internet-deflating',
+  'clothing-deflating',
+  'dewa-savings',
+];
+
 export const RULES: Rule[] = [
   {
     id: 'rent-high', category: 'housing', priority: 'major-lever', confidence: 0.85,

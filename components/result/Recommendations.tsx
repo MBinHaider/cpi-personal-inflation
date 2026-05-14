@@ -1,6 +1,7 @@
 import { Lightbulb, Home, UtensilsCrossed, Fuel, Wifi, Car, Sparkles, TrendingDown, Zap, Smartphone, GraduationCap, PiggyBank, Shirt } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import type { CpiResult, Recommendation, RecCategory } from '../../lib/types';
+import { interpolate } from '../../lib/format';
 
 interface Props { result: CpiResult; }
 
@@ -21,10 +22,6 @@ const RULE_ICON_OVERRIDE: Record<string, React.ReactNode> = {
   'university-grant-info': <GraduationCap className="w-[18px] h-[18px]" />,
   'clothing-deflating': <Shirt className="w-[18px] h-[18px]" />,
 };
-
-function interpolate(s: string, tokens: Record<string, string | number>): string {
-  return s.replace(/\{(\w+)\}/g, (_, k) => (k in tokens ? String(tokens[k]) : `{${k}}`));
-}
 
 export function Recommendations({ result }: Props) {
   const { t } = useLanguage();

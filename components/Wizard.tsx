@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useQuizState } from '../hooks/useQuizState';
 import { NationalityQuestion } from './questions/NationalityQuestion';
 import { IncomeQuestion } from './questions/IncomeQuestion';
@@ -19,12 +19,18 @@ export function Wizard({ onComplete, startStep }: Props) {
   const { state, dispatch, steps, isComplete } = useQuizState();
   const { language } = useLanguage();
 
+  // Latch: if isComplete was already true when the wizard mounted (e.g. the
+  // user clicked "Edit answers" from the result page), suppress the onComplete
+  // call until the user navigates back at least one step and re-completes.
+  const wasInitiallyComplete = useRef(isComplete);
+
   useEffect(() => {
     if (startStep != null) dispatch({ type: 'goto', step: startStep });
   }, [startStep, dispatch]);
 
   useEffect(() => {
-    if (isComplete) {
+    if (isComplete && !wasInitiallyComplete.current) {
+      // User just completed the wizard during this mount — fire onComplete.
       const a = state.answers as QuizAnswers;
       onComplete({
         ...a,
@@ -32,6 +38,11 @@ export function Wizard({ onComplete, startStep }: Props) {
         completedAt: new Date().toISOString(),
         language,
       });
+    }
+    // Clear the latch once the wizard is no longer complete (user went back).
+    // Next time they reach the end, the guard above will be false and onComplete fires.
+    if (!isComplete) {
+      wasInitiallyComplete.current = false;
     }
   }, [isComplete, state.answers, language, onComplete]);
 

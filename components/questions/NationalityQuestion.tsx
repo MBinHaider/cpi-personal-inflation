@@ -17,7 +17,7 @@ export function NationalityQuestion({ stepIndex, stepCount, value, onAnswer, onB
     <QuestionScreen
       stepIndex={stepIndex}
       stepCount={stepCount}
-      questionNumberLabel="Question 1"
+
       title={t('q1.title')}
       sub={t('q1.sub')}
       onBack={onBack}

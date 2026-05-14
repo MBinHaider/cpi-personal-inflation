@@ -1,8 +1,9 @@
-import { Gauge, Home, Car, UtensilsCrossed, PiggyBank } from 'lucide-react';
+import { Gauge, Home, Car, UtensilsCrossed, PiggyBank, Pencil } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import type { CpiResult, AffordabilityMetric, AffordabilityKey } from '../../lib/types';
+import { formatPercent } from '../../lib/format';
 
-interface Props { result: CpiResult; }
+interface Props { result: CpiResult; onEdit?: () => void; }
 
 const ICON: Record<AffordabilityKey, React.ReactElement> = {
   rent:      <Home className="w-3 h-3" />,
@@ -18,9 +19,28 @@ const LABEL_KEY: Record<AffordabilityKey, string> = {
   headroom: 'result.afford.headroom',
 };
 
-export function AffordabilitySnapshot({ result }: Props) {
-  const { t } = useLanguage();
-  if (result.affordability.length === 0) return null;
+export function AffordabilitySnapshot({ result, onEdit }: Props) {
+  const { t, language } = useLanguage();
+  if (result.affordability.length === 0) {
+    return (
+      <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-5">
+        <h3 className="text-[15px] font-semibold mb-1 flex items-center gap-2 text-gray-900 dark:text-gray-100">
+          <Gauge className="w-4 h-4 text-[#0066cc]" /> {t('result.afford.title')}
+        </h3>
+        <p className="text-sm text-gray-500 dark:text-gray-400 italic mt-3 mb-4">
+          {t('result.afford.emptyState')}
+        </p>
+        {onEdit && (
+          <button
+            onClick={onEdit}
+            className="text-xs px-3.5 py-2 border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg inline-flex items-center gap-1.5 hover:border-[#0066cc] hover:text-[#0066cc]"
+          >
+            <Pencil className="w-3.5 h-3.5" /> {t('result.afford.editAnswers')}
+          </button>
+        )}
+      </div>
+    );
+  }
   return (
     <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-5">
       <h3 className="text-[15px] font-semibold mb-1 flex items-center gap-2 text-gray-900 dark:text-gray-100">
@@ -28,13 +48,13 @@ export function AffordabilitySnapshot({ result }: Props) {
       </h3>
       <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">{t('result.afford.sub')}</p>
       <div className="flex flex-col gap-3.5">
-        {result.affordability.map(m => <Row key={m.key} metric={m} t={t} />)}
+        {result.affordability.map(m => <Row key={m.key} metric={m} t={t} language={language} />)}
       </div>
     </div>
   );
 }
 
-function Row({ metric, t }: { metric: AffordabilityMetric; t: (k: string) => string }) {
+function Row({ metric, t, language }: { metric: AffordabilityMetric; t: (k: string) => string; language: 'en' | 'ar' }) {
   const pct = Math.min(1, Math.max(0, metric.pctOfIncome));
   const fillCls =
     metric.status === 'alert' ? 'bg-[#ef4444]' :
@@ -48,8 +68,8 @@ function Row({ metric, t }: { metric: AffordabilityMetric; t: (k: string) => str
           {t(LABEL_KEY[metric.key])}
         </span>
         <div className="flex gap-2.5 text-gray-500">
-          <span>{t('result.afford.benchmark')} <strong className="text-gray-900 dark:text-gray-100">{Math.round(metric.benchmarkPct * 100)}%</strong></span>
-          <strong className="text-gray-900 dark:text-gray-100">{Math.round(metric.pctOfIncome * 100)}%</strong>
+          <span>{t('result.afford.benchmark')} <strong className="text-gray-900 dark:text-gray-100">{formatPercent(metric.benchmarkPct * 100, language, 0, 'never')}</strong></span>
+          <strong className="text-gray-900 dark:text-gray-100">{formatPercent(metric.pctOfIncome * 100, language, 0, 'never')}</strong>
         </div>
       </div>
       <div className="bg-gray-100 dark:bg-slate-700 rounded-full h-2 relative overflow-visible">

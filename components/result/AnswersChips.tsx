@@ -1,18 +1,20 @@
 import { Wallet, Home, UsersRound, Car, UtensilsCrossed, School, Pencil } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import type { QuizAnswers } from '../../lib/types';
+import { isRenterHousing } from '../../lib/types';
+import { formatNumber } from '../../lib/format';
 
 interface Props { answers: QuizAnswers; onEdit: () => void; }
 
 export function AnswersChips({ answers, onEdit }: Props) {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const income = answers.income === 'skipped' ? '—' : `AED ${t(`q2.bracket.${answers.income}`)}`;
   const rent = answers.housing.rentBracket
     ? `AED ${t(`q3.bracket.${answers.housing.rentBracket}`)}`
     : answers.housing.branch === 'emirati'
       ? t(`q3.emirati.${answers.housing.kind}.label`)
       : t('q3.expat.skip');
-  const household = `${answers.household.adults} + ${answers.household.kids}`;
+  const household = `${formatNumber(answers.household.adults, language)} + ${formatNumber(answers.household.kids, language)}`;
   const transport = t(`q5.${answers.transport}.label`);
   const eating = t(`q6.${answers.eatingOut}.label`);
   const schooling = answers.schooling === 'none' ? '—' : t(`q7.${answers.schooling}.label`);
@@ -20,7 +22,7 @@ export function AnswersChips({ answers, onEdit }: Props) {
   return (
     <div className="flex flex-wrap gap-1.5 mb-6">
       <Chip icon={<Wallet />} label={t('result.chip.income')} value={income} />
-      <Chip icon={<Home />} label={t('result.chip.rent')} value={rent} />
+      <Chip icon={<Home />} label={t(isRenterHousing(answers.housing) ? 'result.chip.rent' : 'result.chip.housing')} value={rent} />
       <Chip icon={<UsersRound />} label={t('result.chip.household')} value={household} />
       <Chip icon={<Car />} label={t('result.chip.transport')} value={transport} />
       <Chip icon={<UtensilsCrossed />} label={t('result.chip.eating')} value={eating} />

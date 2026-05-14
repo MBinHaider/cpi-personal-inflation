@@ -5,18 +5,13 @@ import { ChartWrapper } from '@shared/components/ChartWrapper';
 import { PeriodFilter } from '@shared/components/PeriodFilter';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import monthlyData from '../../data/cpi-monthly.json';
+import { formatMonthYear } from '../../lib/format';
 
 interface MonthRow { date: string; officialCpi: number; officialYoy: number; }
 
 interface Props { personalYoy: number; }
 
 const PERIODS = ['3M', '6M', '12M'];
-
-function formatLabel(date: string) {
-  const [y, m] = date.split('-');
-  const d = new Date(Number(y), Number(m) - 1, 1);
-  return d.toLocaleDateString('en-US', { month: 'short', year: '2-digit' });
-}
 
 export function TrendChart({ personalYoy }: Props) {
   const { t, language } = useLanguage();
@@ -30,7 +25,7 @@ export function TrendChart({ personalYoy }: Props) {
   const chartData = sliced.map((m, i) => {
     const progress = n > 1 ? i / (n - 1) : 1;
     const personal = startOffset + (personalYoy - startOffset) * progress;
-    return { label: formatLabel(m.date), official: m.officialYoy, personal: Math.round(personal * 100) / 100 };
+    return { label: m.date, official: m.officialYoy, personal: Math.round(personal * 100) / 100 };
   });
 
   const isRtl = language === 'ar';
@@ -49,7 +44,7 @@ export function TrendChart({ personalYoy }: Props) {
       <ChartWrapper height={220}>
         <LineChart data={chartData} margin={{ top: 4, right: 16, left: -8, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="rgba(107,114,128,0.15)" />
-          <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} reversed={isRtl} />
+          <XAxis dataKey="label" tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} reversed={isRtl} interval={0} angle={isRtl ? -30 : 0} textAnchor={isRtl ? 'end' : 'middle'} height={isRtl ? 40 : 30} tickFormatter={(d: string) => { const [y, mo] = d.split('-'); return formatMonthYear(new Date(Number(y), Number(mo) - 1, 1), language); }} />
           <YAxis tick={{ fontSize: 11, fill: '#6b7280' }} axisLine={false} tickLine={false} tickFormatter={v => `${v}%`} domain={['auto', 'auto']} orientation={isRtl ? 'right' : 'left'} />
           <Tooltip contentStyle={{ fontSize: 12, borderRadius: 6, border: '1px solid #e0e4e8', background: 'white' }} formatter={(value: number) => [`${value.toFixed(2)}%`]} />
           <Legend iconType="line" wrapperStyle={{ fontSize: 12 }} />
