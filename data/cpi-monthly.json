@@ -1,0 +1,16 @@
+{
+  "months": [
+    { "date": "2025-05", "officialCpi": 104.8, "officialYoy": 2.2 },
+    { "date": "2025-06", "officialCpi": 105.1, "officialYoy": 2.3 },
+    { "date": "2025-07", "officialCpi": 105.3, "officialYoy": 2.4 },
+    { "date": "2025-08", "officialCpi": 105.6, "officialYoy": 2.5 },
+    { "date": "2025-09", "officialCpi": 105.8, "officialYoy": 2.5 },
+    { "date": "2025-10", "officialCpi": 106.0, "officialYoy": 2.6 },
+    { "date": "2025-11", "officialCpi": 106.2, "officialYoy": 2.6 },
+    { "date": "2025-12", "officialCpi": 106.5, "officialYoy": 2.7 },
+    { "date": "2026-01", "officialCpi": 106.7, "officialYoy": 2.7 },
+    { "date": "2026-02", "officialCpi": 106.9, "officialYoy": 2.8 },
+    { "date": "2026-03", "officialCpi": 107.0, "officialYoy": 2.8 },
+    { "date": "2026-04", "officialCpi": 107.2, "officialYoy": 2.8 }
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "bracketMidpoints": {
+    "income": { "u10k": 7500, "10-20k": 15000, "20-40k": 30000, "40-80k": 60000, "80-150k": 115000, "150k+": 200000 },
+    "rent":   { "u3k": 2000, "3-6k": 4500, "6-10k": 8000, "10-18k": 14000, "18-30k": 24000, "30k+": 40000 }
+  },
+  "dubaiAverages": {
+    "housingPctOfBasket":    0.336,
+    "rentPctOfIncome":       0.32,
+    "transportPctOfIncome":  0.13,
+    "restaurantPctOfIncome": 0.06,
+    "savingsHeadroomPct":    0.22,
+    "averageHouseholdSize":  3.0,
+    "trackedSpendRatio":     0.78,
+    "averageRentAED":        9500
+  },
+  "nationalityAdjustments": {
+    "emirati": {
+      "utilityScaler":   0.55,
+      "healthScaler":    0.30,
+      "educationPublic": 0,
+      "educationUni":    0
+    },
+    "expat": {
+      "utilityScaler":   1.0,
+      "healthScaler":    1.0,
+      "educationPublic": 0.4,
+      "educationUni":    1.0
+    }
+  },
+  "eatingOutMultiplier": { "rarely": 0.4, "sometimes": 0.8, "often": 1.4, "very-often": 2.0 },
+  "schoolFeeIndex":      { "public": 0, "private": 1.0, "university": 0.4, "none": 0 },
+  "transportShape": {
+    "own-car":      { "petrol": 0.45, "car-insurance": 0.15, "car-maint": 0.20, "taxi": 0.10, "metro": 0.10 },
+    "mixed":        { "petrol": 0.25, "car-insurance": 0.10, "car-maint": 0.10, "taxi": 0.25, "metro": 0.30 },
+    "taxi-metro":   { "petrol": 0,    "car-insurance": 0,    "car-maint": 0,    "taxi": 0.50, "metro": 0.50 },
+    "metro-walk":   { "petrol": 0,    "car-insurance": 0,    "car-maint": 0,    "taxi": 0.20, "metro": 0.80 }
+  },
+  "affordabilityThresholds": {
+    "rentPctOfIncome":       { "warn": 0.35, "alert": 0.45 },
+    "transportPctOfIncome":  { "warn": 0.18, "alert": 0.25 },
+    "restaurantPctOfIncome": { "warn": 0.10, "alert": 0.15 }
+  }
+}
