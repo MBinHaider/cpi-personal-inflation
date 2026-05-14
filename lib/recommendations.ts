@@ -2,6 +2,7 @@ import type {
   QuizAnswers, CpiResult, CpiItemsData, Profiles, Recommendation,
 } from './types';
 import { RULES, FALLBACK_POOL, type RuleContext } from './recommendations.rules';
+import { formatNumber } from './format';
 
 export type TranslateFn = (key: string, tokens?: Record<string, string | number>) => string;
 
@@ -59,6 +60,8 @@ export function generateRecommendations(
     else standardSlots.push(m);
   }
 
+  const lang = answers.language;
+
   function add(m: typeof matched[number]) {
     if (out.length >= 4) return;
     const cat = m.rule.category;
@@ -66,10 +69,10 @@ export function generateRecommendations(
     perCat[cat] = (perCat[cat] ?? 0) + 1;
     const title = t(`rec.${m.rule.id}.title`);
     const why = interpolate(t(`rec.${m.rule.id}.why`), {
-      rentPct: Math.round(rentPctOfIncome * 100),
-      restaurantPct: Math.round(restaurantPctOfIncome * 100),
-      savingLow: m.saving.low,
-      savingHigh: m.saving.high,
+      rentPct: formatNumber(Math.round(rentPctOfIncome * 100), lang),
+      restaurantPct: formatNumber(Math.round(restaurantPctOfIncome * 100), lang),
+      savingLow: formatNumber(m.saving.low, lang),
+      savingHigh: formatNumber(m.saving.high, lang),
     });
     out.push({
       id: m.rule.id,
@@ -106,10 +109,10 @@ export function generateRecommendations(
       const saving = rule.estimateSaving(ctx);
       const title = t(`rec.${rule.id}.title`);
       const why = interpolate(t(`rec.${rule.id}.why`), {
-        rentPct: Math.round(rentPctOfIncome * 100),
-        restaurantPct: Math.round(restaurantPctOfIncome * 100),
-        savingLow: saving.low,
-        savingHigh: saving.high,
+        rentPct: formatNumber(Math.round(rentPctOfIncome * 100), lang),
+        restaurantPct: formatNumber(Math.round(restaurantPctOfIncome * 100), lang),
+        savingLow: formatNumber(saving.low, lang),
+        savingHigh: formatNumber(saving.high, lang),
       });
       out.push({
         id: rule.id,

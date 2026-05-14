@@ -48,11 +48,16 @@ export function GapDecomposition({ result }: Props) {
         </div>
       </div>
 
-      <div className="text-xs text-gray-700 dark:text-gray-300 leading-relaxed bg-gray-50 dark:bg-slate-700/50 px-3.5 py-3 border-s-[3px] border-[#0066cc] rounded">
-        {interpolate(t(narrativeKey), {
-          mixPct: formatNumber(mixPct, language),
-          marketPct: formatNumber(marketPct, language),
-        })}
+      <div className="bg-gray-50 dark:bg-slate-700/50 px-3.5 py-3 border-s-[3px] border-[#0066cc] rounded">
+        <p className="text-sm font-medium text-gray-700 dark:text-gray-300 leading-relaxed">
+          {interpolate(t(`${narrativeKey}.lede`), {
+            mixPct: formatNumber(mixPct, language),
+            marketPct: formatNumber(marketPct, language),
+          })}
+        </p>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">
+          {t(`${narrativeKey}.detail`)}
+        </p>
       </div>
     </div>
   );

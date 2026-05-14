@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { PageShell } from '@shared/components/PageShell';
 import { Header } from '@shared/components/Header';
 import { useLanguage } from '@shared/contexts/LanguageContext';
@@ -6,7 +6,7 @@ import { Welcome } from './Welcome';
 import { Wizard } from './Wizard';
 import { LoadingTransition } from './LoadingTransition';
 import { ResultPage } from './result/ResultPage';
-import { useQuizState, STORAGE_KEY } from '../hooks/useQuizState';
+import { STORAGE_KEY } from '../hooks/useQuizState';
 import { computeCpiWithRecommendations } from '../lib/calc';
 import { profiles } from '../lib/profiles';
 import cpiItems from '../data/cpi-items.json';
@@ -36,6 +36,7 @@ export function CpiInteractive() {
   const [view, setView] = useState<View>(initial ? 'result' : 'welcome');
   const [answers, setAnswers] = useState<QuizAnswers | null>(initial);
   const [wizardStartStep, setWizardStartStep] = useState<number | undefined>(undefined);
+  const [wizardStartStepKey, setWizardStartStepKey] = useState<string | null>(null);
 
   const result: CpiResult | null = useMemo(() => {
     if (!answers) return null;
@@ -44,6 +45,7 @@ export function CpiInteractive() {
 
   const handleStart = useCallback(() => {
     setWizardStartStep(0);
+    setWizardStartStepKey(null);
     setView('wizard');
   }, []);
 
@@ -53,16 +55,20 @@ export function CpiInteractive() {
   }, []);
 
   const handleLoadingDone = useCallback(() => setView('result'), []);
-  const handleEdit = useCallback(() => { setWizardStartStep(0); setView('wizard'); }, []);
+
+  const handleEdit = useCallback((stepKey?: string) => {
+    setWizardStartStepKey(stepKey ?? null);
+    setWizardStartStep(0);
+    setView('wizard');
+  }, []);
+
   const handleRetake = useCallback(() => {
     try { localStorage.removeItem(STORAGE_KEY); } catch {}
     setAnswers(null);
     setWizardStartStep(0);
+    setWizardStartStepKey(null);
     setView('welcome');
   }, []);
-
-  // Refresh result when language changes (for recommendation text)
-  useEffect(() => {/* memo dep already covers */}, [language]);
 
   return (
     <PageShell>
@@ -70,7 +76,11 @@ export function CpiInteractive() {
       <div className="px-6 pb-10 pt-2 max-w-[1100px] mx-auto">
         {view === 'welcome' && <Welcome onStart={handleStart} />}
         {view === 'wizard' && (
-          <Wizard onComplete={handleWizardComplete} startStep={wizardStartStep} key={wizardStartStep ?? 'fresh'} />
+          <Wizard
+            onComplete={handleWizardComplete}
+            startStep={wizardStartStep}
+            startStepKey={wizardStartStepKey}
+          />
         )}
         {view === 'loading' && (
           <LoadingTransition onDone={handleLoadingDone} previewYoy={result?.personalYoy} />

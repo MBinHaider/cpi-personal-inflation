@@ -2,9 +2,9 @@ import { Wallet, Home, UsersRound, Car, UtensilsCrossed, School, Pencil } from '
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import type { QuizAnswers } from '../../lib/types';
 import { isRenterHousing } from '../../lib/types';
-import { formatNumber } from '../../lib/format';
+import { formatNumber, interpolate } from '../../lib/format';
 
-interface Props { answers: QuizAnswers; onEdit: () => void; }
+interface Props { answers: QuizAnswers; onEdit: (stepKey?: string) => void; }
 
 export function AnswersChips({ answers, onEdit }: Props) {
   const { t, language } = useLanguage();
@@ -19,26 +19,67 @@ export function AnswersChips({ answers, onEdit }: Props) {
   const eating = t(`q6.${answers.eatingOut}.label`);
   const schooling = answers.schooling === 'none' ? '—' : t(`q7.${answers.schooling}.label`);
 
+  const incomeLabel = t('result.chip.income');
+  const housingLabel = t(isRenterHousing(answers.housing) ? 'result.chip.rent' : 'result.chip.housing');
+  const householdLabel = t('result.chip.household');
+  const transportLabel = t('result.chip.transport');
+  const eatingLabel = t('result.chip.eating');
+  const schoolingLabel = t('result.chip.schooling');
+
   return (
     <div className="flex flex-wrap gap-1.5 mb-6">
-      <Chip icon={<Wallet />} label={t('result.chip.income')} value={income} />
-      <Chip icon={<Home />} label={t(isRenterHousing(answers.housing) ? 'result.chip.rent' : 'result.chip.housing')} value={rent} />
-      <Chip icon={<UsersRound />} label={t('result.chip.household')} value={household} />
-      <Chip icon={<Car />} label={t('result.chip.transport')} value={transport} />
-      <Chip icon={<UtensilsCrossed />} label={t('result.chip.eating')} value={eating} />
-      <Chip icon={<School />} label={t('result.chip.schooling')} value={schooling} />
-      <button onClick={onEdit} className="text-[11px] px-3 py-1 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-full text-[#0066cc] inline-flex items-center gap-1.5 hover:bg-gray-50">
-        <Pencil className="w-3 h-3" /> {t('result.chip.edit')}
-      </button>
+      <Chip
+        icon={<Wallet />} label={incomeLabel} value={income}
+        ariaLabel={interpolate(t('result.chip.editAria'), { label: incomeLabel })}
+        onClick={() => onEdit('income')}
+      />
+      <Chip
+        icon={<Home />} label={housingLabel} value={rent}
+        ariaLabel={interpolate(t('result.chip.editAria'), { label: housingLabel })}
+        onClick={() => onEdit('housing')}
+      />
+      <Chip
+        icon={<UsersRound />} label={householdLabel} value={household}
+        ariaLabel={interpolate(t('result.chip.editAria'), { label: householdLabel })}
+        onClick={() => onEdit('household')}
+      />
+      <Chip
+        icon={<Car />} label={transportLabel} value={transport}
+        ariaLabel={interpolate(t('result.chip.editAria'), { label: transportLabel })}
+        onClick={() => onEdit('transport')}
+      />
+      <Chip
+        icon={<UtensilsCrossed />} label={eatingLabel} value={eating}
+        ariaLabel={interpolate(t('result.chip.editAria'), { label: eatingLabel })}
+        onClick={() => onEdit('eatingOut')}
+      />
+      <Chip
+        icon={<School />} label={schoolingLabel} value={schooling}
+        ariaLabel={interpolate(t('result.chip.editAria'), { label: schoolingLabel })}
+        onClick={() => onEdit('schooling')}
+      />
     </div>
   );
 }
 
-function Chip({ icon, label, value }: { icon: React.ReactElement; label: string; value: string }) {
-  const sized = { ...icon, props: { ...icon.props, className: 'w-3 h-3 text-gray-500' } };
+function Chip({
+  icon, label, value, ariaLabel, onClick,
+}: {
+  icon: React.ReactElement;
+  label: string;
+  value: string;
+  ariaLabel: string;
+  onClick: () => void;
+}) {
+  const sized = { ...icon, props: { ...icon.props, className: 'w-3 h-3 text-gray-500 group-hover:text-[#0066cc] transition-colors' } };
   return (
-    <span className="text-[11px] px-3 py-1 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-full text-gray-600 dark:text-gray-300 inline-flex items-center gap-1.5">
-      {sized} {label} <strong className="text-gray-900 dark:text-gray-100 font-semibold">{value}</strong>
-    </span>
+    <button
+      onClick={onClick}
+      aria-label={ariaLabel}
+      className="group text-[11px] px-3 py-1 bg-white dark:bg-slate-700 border border-gray-200 dark:border-slate-600 rounded-full text-gray-600 dark:text-gray-300 inline-flex items-center gap-1.5 hover:bg-gray-50 dark:hover:bg-slate-600 hover:border-[#0066cc] cursor-pointer transition-colors"
+    >
+      {sized} {label} <strong className="text-gray-900 dark:text-gray-100 font-semibold group-hover:text-[#0066cc] transition-colors">{value}</strong>
+      <Pencil className="w-2.5 h-2.5 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity ms-0.5" />
+    </button>
   );
 }

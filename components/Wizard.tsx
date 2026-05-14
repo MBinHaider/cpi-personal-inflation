@@ -12,10 +12,11 @@ import { useLanguage } from '@shared/contexts/LanguageContext';
 
 interface Props {
   onComplete: (answers: QuizAnswers) => void;
-  startStep?: number;                       // for "Edit answers" entry
+  startStep?: number;                       // for "Edit answers" entry (step 0)
+  startStepKey?: string | null;             // jump to a specific step by key
 }
 
-export function Wizard({ onComplete, startStep }: Props) {
+export function Wizard({ onComplete, startStep, startStepKey }: Props) {
   const { state, dispatch, steps, isComplete } = useQuizState();
   const { language } = useLanguage();
 
@@ -24,9 +25,18 @@ export function Wizard({ onComplete, startStep }: Props) {
   // call until the user navigates back at least one step and re-completes.
   const wasInitiallyComplete = useRef(isComplete);
 
+  // Ref to always have the latest steps without it being an effect dependency.
+  const stepsRef = useRef(steps);
+  stepsRef.current = steps;
+
   useEffect(() => {
-    if (startStep != null) dispatch({ type: 'goto', step: startStep });
-  }, [startStep, dispatch]);
+    if (startStepKey != null) {
+      const idx = stepsRef.current.indexOf(startStepKey as any);
+      if (idx >= 0) dispatch({ type: 'goto', step: idx });
+    } else if (startStep != null) {
+      dispatch({ type: 'goto', step: startStep });
+    }
+  }, [startStep, startStepKey, dispatch]);
 
   useEffect(() => {
     if (isComplete && !wasInitiallyComplete.current) {
