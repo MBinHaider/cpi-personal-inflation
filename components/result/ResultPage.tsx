@@ -87,7 +87,7 @@ export function ResultPage({ answers, result, onRetake, onEdit }: Props) {
       <Hero result={result} answers={answers} />
       <GapDecomposition result={result} />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <TopDrivers result={result} />
+        <TopDrivers result={result} incomeSkipped={answers.income === 'skipped'} />
         <AffordabilitySnapshot result={result} onEdit={onEdit} />
       </div>
       <Recommendations result={result} />
