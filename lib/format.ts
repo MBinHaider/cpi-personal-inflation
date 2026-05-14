@@ -87,13 +87,33 @@ export function formatPercent(
  * EN example: "AED 23,400"
  * AR example: "AED ٢٣٬٤٠٠"
  *
- * @param n      The amount in AED.
- * @param locale 'en' | 'ar'.
+ * EN signed example: "+AED 102" / "-AED 152"
+ * AR signed example: "+AED ١٠٢" / "-AED ١٥٢"
+ *
+ * @param n           The amount in AED.
+ * @param locale      'en' | 'ar'.
+ * @param signDisplay Intl signDisplay option (default 'auto' → no sign for positive).
+ *                    Pass 'always' to show + for positive values.
  */
-export function formatCurrencyAed(n: number, locale: Locale): string {
+export function formatCurrencyAed(
+  n: number,
+  locale: Locale,
+  signDisplay: Intl.NumberFormatOptions['signDisplay'] = 'auto',
+): string {
   const formatted = new Intl.NumberFormat(resolvedLocale(locale), {
     maximumFractionDigits: 0,
+    signDisplay,
   }).format(n);
+  // For 'always'/'exceptZero' signDisplay, Intl injects bidi control chars
+  // (U+061C Arabic Letter Mark, U+200E/U+200F) around the +/- in AR output.
+  // Strip them, extract the sign char, then rebuild as "{sign}AED {digits}".
+  if (signDisplay === 'always' || signDisplay === 'exceptZero') {
+    // Remove bidi control characters to find the sign reliably.
+    const stripped = formatted.replace(/[؜‎‏‪-‮⁦-⁩]/g, '');
+    const sign = stripped[0] === '+' || stripped[0] === '-' ? stripped[0] : '';
+    const digits = sign ? stripped.slice(1) : stripped;
+    return sign ? `${sign}AED ${digits}` : `AED ${digits}`;
+  }
   return `AED ${formatted}`;
 }
 

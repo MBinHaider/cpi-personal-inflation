@@ -33,13 +33,13 @@ export function Recommendations({ result }: Props) {
       </h3>
       <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">{t('result.rec.sub')}</p>
       <div className="flex flex-col gap-2.5">
-        {result.recommendations.map(r => <Card key={r.id} rec={r} t={t} language={language} />)}
+        {result.recommendations.map((r, i) => <Card key={r.id} rec={r} index={i} t={t} language={language} />)}
       </div>
     </div>
   );
 }
 
-function Card({ rec, t, language }: { rec: Recommendation; t: (k: string) => string; language: 'en' | 'ar' }) {
+function Card({ rec, index, t, language }: { rec: Recommendation; index: number; t: (k: string) => string; language: 'en' | 'ar' }) {
   const icon = RULE_ICON_OVERRIDE[rec.id] ?? CAT_ICON[rec.category];
   const isEasyWin = rec.priority === 'easy-win';
   const isInfo = rec.savingLow === 0 && rec.savingHigh === 0;
@@ -48,12 +48,20 @@ function Card({ rec, t, language }: { rec: Recommendation; t: (k: string) => str
     low: formatNumber(rec.savingLow, language),
     high: formatNumber(rec.savingHigh, language),
   });
+  const isMajor = index === 0;
+  const pillLabel = isMajor ? t('result.recs.tag.major') : t('result.recs.tag.tip');
+  const pillClass = isMajor
+    ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
+    : 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400';
   return (
     <div className="flex gap-3.5 p-4 bg-gray-50 dark:bg-slate-700/50 border border-gray-200 dark:border-slate-700 rounded-xl hover:border-[#0066cc] transition-colors">
       <div className="w-9 h-9 rounded-lg bg-[#0066cc] text-white flex items-center justify-center shrink-0">
         {icon}
       </div>
       <div className="flex-1 min-w-0">
+        <span className={`inline-block mb-1.5 px-2 py-0.5 rounded text-[10px] font-semibold uppercase tracking-wide ${pillClass}`}>
+          {pillLabel}
+        </span>
         <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-1">{rec.title}</div>
         <div className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed mb-2">{rec.why}</div>
         {!isInfo && (

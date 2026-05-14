@@ -126,5 +126,12 @@ export function generateRecommendations(
     }
   }
 
+  // Final sort: highest saving midpoint first; recs with no savings (both 0) fall to bottom.
+  out.sort((a, b) => {
+    const midA = a.savingLow === 0 && a.savingHigh === 0 ? -Infinity : (a.savingLow + a.savingHigh) / 2;
+    const midB = b.savingLow === 0 && b.savingHigh === 0 ? -Infinity : (b.savingLow + b.savingHigh) / 2;
+    return midB - midA;
+  });
+
   return out;
 }

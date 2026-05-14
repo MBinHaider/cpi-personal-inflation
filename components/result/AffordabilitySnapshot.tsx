@@ -1,4 +1,5 @@
-import { Gauge, Home, Car, UtensilsCrossed, PiggyBank, Pencil } from 'lucide-react';
+import { useState } from 'react';
+import { Gauge, Home, Car, UtensilsCrossed, PiggyBank, Pencil, ChevronDown, ChevronUp } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import type { CpiResult, AffordabilityMetric, AffordabilityKey } from '../../lib/types';
 import { formatPercent } from '../../lib/format';
@@ -19,8 +20,17 @@ const LABEL_KEY: Record<AffordabilityKey, string> = {
   headroom: 'result.afford.headroom',
 };
 
+const SHORT_LABEL_KEY: Record<AffordabilityKey, string> = {
+  rent: 'result.afford.short.rent',
+  transport: 'result.afford.short.transport',
+  eating: 'result.afford.short.eating',
+  headroom: 'result.afford.short.headroom',
+};
+
 export function AffordabilitySnapshot({ result, onEdit }: Props) {
   const { t, language } = useLanguage();
+  const [expanded, setExpanded] = useState(false);
+
   if (result.affordability.length === 0) {
     return (
       <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-5">
@@ -41,15 +51,34 @@ export function AffordabilitySnapshot({ result, onEdit }: Props) {
       </div>
     );
   }
+
+  const summaryLine = result.affordability
+    .map(m => `${t(SHORT_LABEL_KEY[m.key])}: ${formatPercent(m.pctOfIncome * 100, language, 0, 'never')}`)
+    .join(' · ');
+
   return (
     <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-5">
       <h3 className="text-[15px] font-semibold mb-1 flex items-center gap-2 text-gray-900 dark:text-gray-100">
         <Gauge className="w-4 h-4 text-[#0066cc]" /> {t('result.afford.title')}
       </h3>
-      <p className="text-xs text-gray-500 dark:text-gray-400 mb-4">{t('result.afford.sub')}</p>
-      <div className="flex flex-col gap-3.5">
-        {result.affordability.map(m => <Row key={m.key} metric={m} t={t} language={language} />)}
+      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">{t('result.afford.sub')}</p>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs text-gray-600 dark:text-gray-400 flex-1">{summaryLine}</p>
+        <button
+          onClick={() => setExpanded(prev => !prev)}
+          className="shrink-0 text-xs px-3 py-1.5 border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg inline-flex items-center gap-1.5 hover:border-[#0066cc] hover:text-[#0066cc] transition-colors"
+        >
+          {expanded
+            ? <><ChevronUp className="w-3.5 h-3.5" />{t('result.afford.hideBreakdown')}</>
+            : <><ChevronDown className="w-3.5 h-3.5" />{t('result.afford.showBreakdown')}</>
+          }
+        </button>
       </div>
+      {expanded && (
+        <div className="flex flex-col gap-3.5 mt-4">
+          {result.affordability.map(m => <Row key={m.key} metric={m} t={t} language={language} />)}
+        </div>
+      )}
     </div>
   );
 }
