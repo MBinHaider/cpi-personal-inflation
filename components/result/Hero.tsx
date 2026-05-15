@@ -1,4 +1,4 @@
-import { Building2, ArrowUpRight, Banknote, AlertTriangle, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { AlertTriangle, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import type { CpiResult, QuizAnswers } from '../../lib/types';
 import { formatPercent, formatCurrencyAed, formatNumber, interpolate } from '../../lib/format';
@@ -35,19 +35,34 @@ export function Hero({ result, answers }: Props) {
   const { t, language } = useLanguage();
   const incomeSkipped = answers.income === 'skipped';
   const isPositive = result.difference >= 0;
-  const verdictKey = isPositive ? 'result.hero.verdict.more' : 'result.hero.verdict.less';
-  const verdict = incomeSkipped
-    ? null
-    : interpolate(t(verdictKey), {
-        ppDiff: formatNumber(Math.abs(result.difference), language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
-        basket: formatNumber(result.estMonthlyBasket, language),
-        extra: formatNumber(Math.abs(result.estMonthlyExtra), language),
-      });
 
   // Signed monthly AED delta: positive = paying more, negative = saving
   const signedMonthlyDelta = isPositive
     ? result.estMonthlyExtra
     : -result.estMonthlyExtra;
+
+  // Verdict: short declarative sentence, only when income is known
+  const verdictKey = isPositive ? 'result.hero.verdict.more' : 'result.hero.verdict.less';
+  const verdict = incomeSkipped
+    ? null
+    : interpolate(t(verdictKey), {
+        ppDiff: formatNumber(Math.abs(result.difference), language, { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      });
+
+  // Context-dependent small-caps label above the big number
+  const heroLabel = incomeSkipped
+    ? t('result.hero.label')
+    : isPositive
+      ? t('result.hero.aedLabel.positive')
+      : t('result.hero.aedLabel.negative');
+
+  // Caption row: personal % and official % — shown only when income is known
+  const rateCaption = incomeSkipped
+    ? null
+    : interpolate(t('result.hero.rateCaption'), {
+        personal: formatPercent(result.personalYoy, language, 2, 'always'),
+        official: formatPercent(result.officialYoy, language, 2, 'always'),
+      });
 
   const status = deriveAffordabilityStatus(result.affordability);
 
@@ -56,59 +71,54 @@ export function Hero({ result, answers }: Props) {
     status.kind === 'warn'  ? AlertCircle :
     CheckCircle2;
 
+  // Big-number tint: red/amber for positive (paying more), green for negative (saving)
+  const bigNumberClass = incomeSkipped
+    ? 'text-[56px] font-semibold tracking-tight leading-none'
+    : isPositive
+      ? 'text-[56px] font-semibold tracking-tight leading-none text-red-200'
+      : 'text-[56px] font-semibold tracking-tight leading-none text-emerald-300';
+
   return (
-    <div className="bg-gradient-to-br from-[#0066cc] to-[#0052a3] text-white rounded-2xl p-8 grid grid-cols-1 lg:grid-cols-[1.2fr,1fr] gap-8 items-center shadow-lg">
-      <div>
+    <div className="bg-gradient-to-br from-[#0066cc] to-[#0052a3] text-white rounded-2xl p-8 shadow-lg">
+      <div className="max-w-2xl">
         {status.kind !== 'noData' && (
           <div className={getBadgeClasses(status.kind)}>
             <BadgeIcon className="size-3.5 shrink-0" />
             <span>{getBadgeLabel(status, t, language)}</span>
           </div>
         )}
+
+        {/* Small-caps context label */}
         <div className="text-xs uppercase tracking-widest text-white/80 font-medium mb-1.5">
-          {t('result.hero.label')}
+          {heroLabel}
         </div>
-        <div className="flex flex-wrap items-end gap-x-6 gap-y-2 mb-2">
-          <div className="text-[56px] font-semibold tracking-tight leading-none">
-            {formatPercent(result.personalYoy, language, 2, 'always')}
-          </div>
-          {!incomeSkipped && (
-            <div className="flex flex-col justify-end pb-1">
-              <span className="text-[28px] font-semibold tracking-tight leading-tight">
-                {formatCurrencyAed(signedMonthlyDelta, language, 'always')}
-              </span>
-              <span className="text-[11px] uppercase tracking-widest text-white/75 leading-tight">
-                {t('result.hero.aedDeltaLabel')}
-              </span>
-            </div>
-          )}
+
+        {/* Big number: AED when income known, % when skipped */}
+        <div className={bigNumberClass}>
+          {incomeSkipped
+            ? formatPercent(result.personalYoy, language, 2, 'always')
+            : formatCurrencyAed(signedMonthlyDelta, language, 'always')}
         </div>
+
+        {/* Verdict sentence */}
         {verdict !== null && (
-          <div className="text-[15px] leading-relaxed text-white/95">{verdict}</div>
+          <div className="text-[15px] leading-relaxed text-white/95 mt-2">{verdict}</div>
         )}
+
+        {/* Skip-income note */}
         {incomeSkipped && (
           <p className="text-[13px] leading-relaxed text-white/80 italic mt-1">
             {t('result.hero.noIncomeNote')}
           </p>
         )}
-      </div>
-      <div className="flex flex-col gap-3">
-        <Stat icon={<Building2 className="w-4 h-4" />} label={t('result.hero.stat.official')} value={formatPercent(result.officialYoy, language, 2, 'always')} />
-        <Stat icon={<ArrowUpRight className="w-4 h-4" />} label={t('result.hero.stat.difference')} value={`${formatNumber(result.difference, language, { minimumFractionDigits: 2, maximumFractionDigits: 2, signDisplay: 'always' })} pp`} />
-        {!incomeSkipped && <Stat icon={<Banknote className="w-4 h-4" />} label={t('result.hero.stat.basket')} value={formatCurrencyAed(result.estMonthlyBasket, language)} />}
-      </div>
-    </div>
-  );
-}
 
-function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
-  return (
-    <div className="flex items-center justify-between px-4 py-3 bg-white/15 rounded-lg">
-      <div className="flex items-center gap-2">
-        <span className="text-white/80">{icon}</span>
-        <span className="text-xs text-white/85">{label}</span>
+        {/* Caption row: both % rates in faded text — replaces stat pills */}
+        {rateCaption !== null && (
+          <div className="text-[12px] text-white/55 mt-3 leading-snug">
+            {rateCaption}
+          </div>
+        )}
       </div>
-      <span className="text-lg font-semibold">{value}</span>
     </div>
   );
 }

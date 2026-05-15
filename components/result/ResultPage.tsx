@@ -85,12 +85,12 @@ export function ResultPage({ answers, result, onRetake, onEdit }: Props) {
         <AnswersChips answers={answers} onEdit={onEdit} />
       </div>
       <Hero result={result} answers={answers} />
-      <GapDecomposition result={result} />
+      <Recommendations result={result} />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <TopDrivers result={result} incomeSkipped={answers.income === 'skipped'} />
         <AffordabilitySnapshot result={result} onEdit={onEdit} />
       </div>
-      <Recommendations result={result} />
+      <GapDecomposition result={result} />
       <TrendChart personalYoy={result.personalYoy} />
 
       <div className="flex flex-col items-center gap-1.5 py-5">
