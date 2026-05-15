@@ -7,7 +7,7 @@ import { useLanguage } from '@shared/contexts/LanguageContext';
 import monthlyData from '../../data/cpi-monthly.json';
 import { formatMonthYear } from '../../lib/format';
 
-interface MonthRow { date: string; officialCpi: number; officialYoy: number; }
+interface MonthRow { date: string; officialYoy: number; officialCpi?: number; }
 
 interface Props { personalYoy: number; }
 

@@ -67,7 +67,7 @@ export const RULES: Rule[] = [
   },
   {
     id: 'eating-out-high', category: 'food', priority: 'standard', confidence: 0.75,
-    trigger: ctx => (ctx.answers.eatingOut === 'often' || ctx.answers.eatingOut === 'very-often') && ctx.restaurantPctOfIncome > 0.08,
+    trigger: ctx => (ctx.answers.eatingOut === 'often' || ctx.answers.eatingOut === 'very-often') && ctx.restaurantPctOfIncome > 0.06,
     estimateSaving: ctx => {
       const hh = ctx.answers.household.adults + ctx.answers.household.kids;
       return { low: 400 * hh, high: 700 * hh };
