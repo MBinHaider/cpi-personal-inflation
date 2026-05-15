@@ -7,292 +7,67 @@
   "divisions": [
     {
       "id": "01",
-      "name_en": "Food & Non-Alcoholic Beverages",
-      "name_ar": "الغذاء والمشروبات غير الكحولية",
+      "name_en": "Food and beverage",
+      "name_ar": "الغذاء والمشروبات",
       "weight": 13.28,
       "items": [
-        {
-          "id": "01-01",
-          "name_en": "Rice (5kg bag)",
-          "name_ar": "أرز (كيس 5 كيلو)",
-          "price_aed": 22,
-          "mom_change": 0.3,
-          "yoy_change": 3.5,
-          "weight": 1.8,
-          "selected": true
-        },
-        {
-          "id": "01-02",
-          "name_en": "Bread (white loaf)",
-          "name_ar": "خبز أبيض (رغيف)",
-          "price_aed": 4,
-          "mom_change": 0.2,
-          "yoy_change": 2.8,
-          "weight": 1.2,
-          "selected": true
-        },
-        {
-          "id": "01-03",
-          "name_en": "Chicken (1kg, fresh)",
-          "name_ar": "دجاج (1 كيلو، طازج)",
-          "price_aed": 18,
-          "mom_change": -0.5,
-          "yoy_change": 1.9,
-          "weight": 2.1,
-          "selected": true
-        },
-        {
-          "id": "01-04",
-          "name_en": "Fish (1kg, local)",
-          "name_ar": "سمك (1 كيلو، محلي)",
-          "price_aed": 45,
-          "mom_change": 1.1,
-          "yoy_change": 4.2,
-          "weight": 1.0,
-          "selected": true
-        },
-        {
-          "id": "01-05",
-          "name_en": "Milk (1L, full fat)",
-          "name_ar": "حليب (1 لتر، كامل الدسم)",
-          "price_aed": 6,
-          "mom_change": 0.0,
-          "yoy_change": 1.5,
-          "weight": 1.3,
-          "selected": true
-        },
-        {
-          "id": "01-06",
-          "name_en": "Eggs (30-pack)",
-          "name_ar": "بيض (علبة 30 حبة)",
-          "price_aed": 18,
-          "mom_change": -0.8,
-          "yoy_change": 5.1,
-          "weight": 1.1,
-          "selected": true
-        },
-        {
-          "id": "01-07",
-          "name_en": "Cooking Oil (1L)",
-          "name_ar": "زيت طهي (1 لتر)",
-          "price_aed": 12,
-          "mom_change": 0.6,
-          "yoy_change": 3.8,
-          "weight": 0.9,
-          "selected": true
-        },
-        {
-          "id": "01-08",
-          "name_en": "Sugar (1kg)",
-          "name_ar": "سكر (1 كيلو)",
-          "price_aed": 5,
-          "mom_change": 0.1,
-          "yoy_change": 2.1,
-          "weight": 0.7,
-          "selected": true
-        },
-        {
-          "id": "01-09",
-          "name_en": "Fresh Fruits (1kg, mixed)",
-          "name_ar": "فواكه طازجة (1 كيلو، مشكل)",
-          "price_aed": 15,
-          "mom_change": 0.9,
-          "yoy_change": 3.2,
-          "weight": 1.6,
-          "selected": true
-        },
-        {
-          "id": "01-10",
-          "name_en": "Fresh Vegetables (1kg, mixed)",
-          "name_ar": "خضروات طازجة (1 كيلو، مشكل)",
-          "price_aed": 10,
-          "mom_change": 1.5,
-          "yoy_change": 4.8,
-          "weight": 1.58,
-          "selected": true
-        }
+        { "id": "01-01", "name_en": "Rice (5kg bag)", "name_ar": "أرز (كيس 5 كيلو)", "price_aed": 22, "mom_change": 0.3, "yoy_change": 3.5, "weight": 1.8, "selected": true },
+        { "id": "01-02", "name_en": "Bread (white loaf)", "name_ar": "خبز أبيض (رغيف)", "price_aed": 4, "mom_change": 0.2, "yoy_change": 2.8, "weight": 1.2, "selected": true },
+        { "id": "01-03", "name_en": "Chicken (1kg, fresh)", "name_ar": "دجاج (1 كيلو، طازج)", "price_aed": 18, "mom_change": -0.5, "yoy_change": 1.9, "weight": 2.1, "selected": true },
+        { "id": "01-04", "name_en": "Fish (1kg, local)", "name_ar": "سمك (1 كيلو، محلي)", "price_aed": 45, "mom_change": 1.1, "yoy_change": 4.2, "weight": 1.0, "selected": true },
+        { "id": "01-05", "name_en": "Milk (1L, full fat)", "name_ar": "حليب (1 لتر، كامل الدسم)", "price_aed": 6, "mom_change": 0.0, "yoy_change": 1.5, "weight": 1.3, "selected": true },
+        { "id": "01-06", "name_en": "Eggs (30-pack)", "name_ar": "بيض (علبة 30 حبة)", "price_aed": 18, "mom_change": -0.8, "yoy_change": 5.1, "weight": 1.1, "selected": true },
+        { "id": "01-07", "name_en": "Cooking Oil (1L)", "name_ar": "زيت طهي (1 لتر)", "price_aed": 12, "mom_change": 0.6, "yoy_change": 3.8, "weight": 0.9, "selected": true },
+        { "id": "01-08", "name_en": "Sugar (1kg)", "name_ar": "سكر (1 كيلو)", "price_aed": 5, "mom_change": 0.1, "yoy_change": 2.1, "weight": 0.7, "selected": true },
+        { "id": "01-09", "name_en": "Fresh Fruits (1kg, mixed)", "name_ar": "فواكه طازجة (1 كيلو، مشكل)", "price_aed": 15, "mom_change": 0.9, "yoy_change": 3.2, "weight": 1.6, "selected": true },
+        { "id": "01-10", "name_en": "Fresh Vegetables (1kg, mixed)", "name_ar": "خضروات طازجة (1 كيلو، مشكل)", "price_aed": 10, "mom_change": 0.4, "yoy_change": 4.8, "weight": 1.58, "selected": true }
       ]
     },
     {
       "id": "02",
-      "name_en": "Alcoholic Beverages & Tobacco",
-      "name_ar": "المشروبات الكحولية والتبغ",
+      "name_en": "Tobacco",
+      "name_ar": "التبغ",
       "weight": 0.36,
       "items": [
-        {
-          "id": "02-01",
-          "name_en": "Cigarettes (pack of 20)",
-          "name_ar": "سجائر (علبة 20 سيجارة)",
-          "price_aed": 24,
-          "mom_change": 0.0,
-          "yoy_change": 0.0,
-          "weight": 0.36,
-          "selected": false
-        }
+        { "id": "02-01", "name_en": "Cigarettes (pack of 20)", "name_ar": "سجائر (علبة 20)", "price_aed": 25, "mom_change": 0.0, "yoy_change": 0.0, "weight": 0.36, "selected": true }
       ]
     },
     {
       "id": "03",
-      "name_en": "Clothing & Footwear",
+      "name_en": "Clothing and footwear",
       "name_ar": "الملابس والأحذية",
       "weight": 5.21,
       "items": [
-        {
-          "id": "03-01",
-          "name_en": "Men's Shirt (casual)",
-          "name_ar": "قميص رجالي (كاجوال)",
-          "price_aed": 120,
-          "mom_change": -1.2,
-          "yoy_change": -2.1,
-          "weight": 1.2,
-          "selected": true
-        },
-        {
-          "id": "03-02",
-          "name_en": "Women's Dress",
-          "name_ar": "فستان نسائي",
-          "price_aed": 180,
-          "mom_change": -0.8,
-          "yoy_change": -1.5,
-          "weight": 1.3,
-          "selected": true
-        },
-        {
-          "id": "03-03",
-          "name_en": "Children's Clothing Set",
-          "name_ar": "طقم ملابس أطفال",
-          "price_aed": 95,
-          "mom_change": -0.5,
-          "yoy_change": -1.2,
-          "weight": 1.0,
-          "selected": true
-        },
-        {
-          "id": "03-04",
-          "name_en": "Men's Shoes (casual)",
-          "name_ar": "حذاء رجالي (كاجوال)",
-          "price_aed": 250,
-          "mom_change": -0.3,
-          "yoy_change": -0.8,
-          "weight": 0.85,
-          "selected": true
-        },
-        {
-          "id": "03-05",
-          "name_en": "Women's Shoes",
-          "name_ar": "حذاء نسائي",
-          "price_aed": 280,
-          "mom_change": -0.4,
-          "yoy_change": -1.0,
-          "weight": 0.86,
-          "selected": true
-        }
+        { "id": "03-01", "name_en": "Men's Shirt (casual)", "name_ar": "قميص رجالي (كاجوال)", "price_aed": 120, "mom_change": -0.3, "yoy_change": -2.1, "weight": 1.2, "selected": true },
+        { "id": "03-02", "name_en": "Women's Dress", "name_ar": "فستان نسائي", "price_aed": 250, "mom_change": -0.2, "yoy_change": -1.5, "weight": 1.3, "selected": true },
+        { "id": "03-03", "name_en": "Children's Clothing Set", "name_ar": "مجموعة ملابس أطفال", "price_aed": 100, "mom_change": -0.1, "yoy_change": -1.2, "weight": 1.0, "selected": true },
+        { "id": "03-04", "name_en": "Men's Shoes (casual)", "name_ar": "حذاء رجالي (كاجوال)", "price_aed": 200, "mom_change": -0.5, "yoy_change": -0.8, "weight": 0.85, "selected": true },
+        { "id": "03-05", "name_en": "Women's Shoes", "name_ar": "حذاء نسائي", "price_aed": 250, "mom_change": -0.4, "yoy_change": -1.0, "weight": 0.86, "selected": true }
       ]
     },
     {
       "id": "04",
-      "name_en": "Housing, Water, Electricity & Gas",
-      "name_ar": "السكن والمياه والكهرباء والغاز",
+      "name_en": "Housing, water, electricity, gas, and other fuels",
+      "name_ar": "السكن والمياه والكهرباء والغاز والوقود",
       "weight": 33.63,
       "items": [
-        {
-          "id": "04-01",
-          "name_en": "Apartment Rent (1BR, monthly)",
-          "name_ar": "إيجار شقة (غرفة نوم، شهري)",
-          "price_aed": 6500,
-          "mom_change": 0.4,
-          "yoy_change": 5.2,
-          "weight": 28.0,
-          "selected": true
-        },
-        {
-          "id": "04-02",
-          "name_en": "Electricity Bill (monthly)",
-          "name_ar": "فاتورة الكهرباء (شهري)",
-          "price_aed": 350,
-          "mom_change": 0.0,
-          "yoy_change": 0.0,
-          "weight": 2.5,
-          "selected": true
-        },
-        {
-          "id": "04-03",
-          "name_en": "Water Bill (monthly)",
-          "name_ar": "فاتورة المياه (شهري)",
-          "price_aed": 80,
-          "mom_change": 0.0,
-          "yoy_change": 0.0,
-          "weight": 0.8,
-          "selected": true
-        },
-        {
-          "id": "04-04",
-          "name_en": "Gas (cylinder)",
-          "name_ar": "غاز (أسطوانة)",
-          "price_aed": 25,
-          "mom_change": 0.0,
-          "yoy_change": 0.0,
-          "weight": 0.33,
-          "selected": true
-        },
-        {
-          "id": "04-05",
-          "name_en": "Home Maintenance (monthly avg)",
-          "name_ar": "صيانة المنزل (متوسط شهري)",
-          "price_aed": 200,
-          "mom_change": 0.2,
-          "yoy_change": 2.5,
-          "weight": 2.0,
-          "selected": true
-        }
+        { "id": "04-01", "name_en": "Apartment Rent (1BR, monthly)", "name_ar": "إيجار شقة (غرفة نوم واحدة، شهرياً)", "price_aed": 6000, "mom_change": 0.4, "yoy_change": 5.2, "weight": 28.0, "selected": true },
+        { "id": "04-02", "name_en": "Electricity Bill (monthly)", "name_ar": "فاتورة الكهرباء (شهرياً)", "price_aed": 600, "mom_change": 0.0, "yoy_change": 0.0, "weight": 2.5, "selected": true },
+        { "id": "04-03", "name_en": "Water Bill (monthly)", "name_ar": "فاتورة المياه (شهرياً)", "price_aed": 150, "mom_change": 0.0, "yoy_change": 0.0, "weight": 0.8, "selected": true },
+        { "id": "04-04", "name_en": "Gas (cylinder)", "name_ar": "غاز (أسطوانة)", "price_aed": 90, "mom_change": 0.0, "yoy_change": 0.0, "weight": 0.33, "selected": true },
+        { "id": "04-05", "name_en": "Home Maintenance (monthly avg)", "name_ar": "صيانة المنزل (متوسط شهري)", "price_aed": 200, "mom_change": 0.3, "yoy_change": 2.5, "weight": 2.0, "selected": true }
       ]
     },
     {
       "id": "05",
-      "name_en": "Furnishings & Household Equipment",
-      "name_ar": "المفروشات والأجهزة المنزلية",
+      "name_en": "Furnishings, household equipment and routine household maintenance",
+      "name_ar": "الأثاث ومعدات المنزل والصيانة المنزلية",
       "weight": 4.73,
       "items": [
-        {
-          "id": "05-01",
-          "name_en": "Sofa Set (3-seater)",
-          "name_ar": "طقم أريكة (3 مقاعد)",
-          "price_aed": 3500,
-          "mom_change": 0.1,
-          "yoy_change": 1.2,
-          "weight": 0.8,
-          "selected": false
-        },
-        {
-          "id": "05-02",
-          "name_en": "Washing Machine",
-          "name_ar": "غسالة ملابس",
-          "price_aed": 2200,
-          "mom_change": -0.5,
-          "yoy_change": -1.8,
-          "weight": 0.9,
-          "selected": false
-        },
-        {
-          "id": "05-03",
-          "name_en": "Cleaning Products (monthly)",
-          "name_ar": "منتجات التنظيف (شهري)",
-          "price_aed": 80,
-          "mom_change": 0.3,
-          "yoy_change": 2.2,
-          "weight": 1.5,
-          "selected": true
-        },
-        {
-          "id": "05-04",
-          "name_en": "Domestic Services (monthly)",
-          "name_ar": "الخدمات المنزلية (شهري)",
-          "price_aed": 1200,
-          "mom_change": 0.5,
-          "yoy_change": 3.5,
-          "weight": 1.53,
-          "selected": false
-        }
+        { "id": "05-01", "name_en": "Sofa Set (3-seater)", "name_ar": "طقم كنبة (3 مقاعد)", "price_aed": 2000, "mom_change": 0.1, "yoy_change": 1.2, "weight": 0.8, "selected": true },
+        { "id": "05-02", "name_en": "Washing Machine", "name_ar": "غسالة", "price_aed": 1500, "mom_change": -0.2, "yoy_change": -1.8, "weight": 0.9, "selected": true },
+        { "id": "05-03", "name_en": "Cleaning Products (monthly)", "name_ar": "مواد التنظيف (شهرياً)", "price_aed": 100, "mom_change": 0.2, "yoy_change": 2.2, "weight": 1.5, "selected": true },
+        { "id": "05-04", "name_en": "Domestic Services (monthly)", "name_ar": "خدمات منزلية (شهرياً)", "price_aed": 500, "mom_change": 0.3, "yoy_change": 3.5, "weight": 1.53, "selected": true }
       ]
     },
     {
@@ -301,170 +76,43 @@
       "name_ar": "الصحة",
       "weight": 1.76,
       "items": [
-        {
-          "id": "06-01",
-          "name_en": "Doctor Visit (GP, per visit)",
-          "name_ar": "زيارة طبيب عام (لكل زيارة)",
-          "price_aed": 250,
-          "mom_change": 0.0,
-          "yoy_change": 1.8,
-          "weight": 0.7,
-          "selected": true
-        },
-        {
-          "id": "06-02",
-          "name_en": "Prescription Medicine (monthly)",
-          "name_ar": "أدوية بوصفة طبية (شهري)",
-          "price_aed": 180,
-          "mom_change": 0.1,
-          "yoy_change": 2.1,
-          "weight": 0.7,
-          "selected": true
-        },
-        {
-          "id": "06-03",
-          "name_en": "Dental Checkup",
-          "name_ar": "فحص الأسنان",
-          "price_aed": 350,
-          "mom_change": 0.0,
-          "yoy_change": 2.5,
-          "weight": 0.36,
-          "selected": false
-        }
+        { "id": "06-01", "name_en": "Doctor Visit (GP, per visit)", "name_ar": "زيارة طبيب عام", "price_aed": 200, "mom_change": 0.2, "yoy_change": 1.8, "weight": 0.7, "selected": true },
+        { "id": "06-02", "name_en": "Prescription Medicine (monthly)", "name_ar": "أدوية بوصفة طبية (شهرياً)", "price_aed": 150, "mom_change": 0.1, "yoy_change": 2.1, "weight": 0.7, "selected": true },
+        { "id": "06-03", "name_en": "Dental Checkup", "name_ar": "فحص أسنان", "price_aed": 300, "mom_change": 0.3, "yoy_change": 2.5, "weight": 0.36, "selected": true }
       ]
     },
     {
       "id": "07",
       "name_en": "Transport",
-      "name_ar": "المواصلات",
-      "weight": 12.73,
+      "name_ar": "النقل",
+      "weight": 10.73,
       "items": [
-        {
-          "id": "07-01",
-          "name_en": "Petrol (per litre, Special 95)",
-          "name_ar": "بنزين (لكل لتر، سبيشيال 95)",
-          "price_aed": 3.06,
-          "mom_change": 2.1,
-          "yoy_change": 6.8,
-          "weight": 4.5,
-          "selected": true
-        },
-        {
-          "id": "07-02",
-          "name_en": "Taxi (avg monthly spend)",
-          "name_ar": "تاكسي (متوسط الإنفاق الشهري)",
-          "price_aed": 400,
-          "mom_change": 0.3,
-          "yoy_change": 3.2,
-          "weight": 2.0,
-          "selected": true
-        },
-        {
-          "id": "07-03",
-          "name_en": "Metro Pass (monthly)",
-          "name_ar": "بطاقة مترو (شهري)",
-          "price_aed": 350,
-          "mom_change": 0.0,
-          "yoy_change": 0.0,
-          "weight": 1.8,
-          "selected": true
-        },
-        {
-          "id": "07-04",
-          "name_en": "Car Insurance (annual/12)",
-          "name_ar": "تأمين السيارة (سنوي/12)",
-          "price_aed": 350,
-          "mom_change": 0.5,
-          "yoy_change": 4.1,
-          "weight": 2.0,
-          "selected": false
-        },
-        {
-          "id": "07-05",
-          "name_en": "Car Maintenance (monthly avg)",
-          "name_ar": "صيانة السيارة (متوسط شهري)",
-          "price_aed": 250,
-          "mom_change": 0.4,
-          "yoy_change": 3.5,
-          "weight": 2.43,
-          "selected": false
-        }
+        { "id": "07-01", "name_en": "Petrol (per litre, Special 95)", "name_ar": "بنزين (لكل لتر، خاص 95)", "price_aed": 3.05, "mom_change": 0.7, "yoy_change": 6.8, "weight": 4.5, "selected": true },
+        { "id": "07-02", "name_en": "Taxi (avg monthly spend)", "name_ar": "أجرة تاكسي (متوسط شهري)", "price_aed": 300, "mom_change": 0.4, "yoy_change": 3.2, "weight": 2.0, "selected": true },
+        { "id": "07-03", "name_en": "Metro Pass (monthly)", "name_ar": "بطاقة مترو (شهرياً)", "price_aed": 350, "mom_change": 0.0, "yoy_change": 0.0, "weight": 1.8, "selected": true },
+        { "id": "07-04", "name_en": "Car Maintenance (monthly avg)", "name_ar": "صيانة السيارة (متوسط شهري)", "price_aed": 250, "mom_change": 0.3, "yoy_change": 3.5, "weight": 2.43, "selected": true }
       ]
     },
     {
       "id": "08",
-      "name_en": "Communication",
-      "name_ar": "الاتصالات",
-      "weight": 5.40,
+      "name_en": "Information and communication",
+      "name_ar": "المعلومات والاتصالات",
+      "weight": 5.4,
       "items": [
-        {
-          "id": "08-01",
-          "name_en": "Mobile Plan (monthly, postpaid)",
-          "name_ar": "خطة هاتف محمول (شهري، بعد الدفع)",
-          "price_aed": 230,
-          "mom_change": 0.0,
-          "yoy_change": -1.5,
-          "weight": 3.0,
-          "selected": true
-        },
-        {
-          "id": "08-02",
-          "name_en": "Home Internet (monthly)",
-          "name_ar": "إنترنت منزلي (شهري)",
-          "price_aed": 390,
-          "mom_change": 0.0,
-          "yoy_change": -2.0,
-          "weight": 2.4,
-          "selected": true
-        }
+        { "id": "08-01", "name_en": "Mobile Plan (monthly, postpaid)", "name_ar": "باقة جوال شهرية (فاتورة)", "price_aed": 150, "mom_change": -0.2, "yoy_change": -1.5, "weight": 3.0, "selected": true },
+        { "id": "08-02", "name_en": "Home Internet (monthly)", "name_ar": "إنترنت منزلي (شهرياً)", "price_aed": 300, "mom_change": -0.3, "yoy_change": -2.0, "weight": 2.4, "selected": true }
       ]
     },
     {
       "id": "09",
-      "name_en": "Recreation & Culture",
-      "name_ar": "الترفيه والثقافة",
+      "name_en": "Recreation, sport and culture",
+      "name_ar": "الترفيه والرياضة والثقافة",
       "weight": 3.26,
       "items": [
-        {
-          "id": "09-01",
-          "name_en": "Cinema Ticket",
-          "name_ar": "تذكرة سينما",
-          "price_aed": 55,
-          "mom_change": 0.0,
-          "yoy_change": 2.0,
-          "weight": 0.6,
-          "selected": false
-        },
-        {
-          "id": "09-02",
-          "name_en": "Gym Membership (monthly)",
-          "name_ar": "اشتراك صالة رياضية (شهري)",
-          "price_aed": 350,
-          "mom_change": 0.3,
-          "yoy_change": 2.8,
-          "weight": 1.0,
-          "selected": false
-        },
-        {
-          "id": "09-03",
-          "name_en": "Books & Magazines (monthly)",
-          "name_ar": "كتب ومجلات (شهري)",
-          "price_aed": 60,
-          "mom_change": 0.1,
-          "yoy_change": 1.5,
-          "weight": 0.66,
-          "selected": false
-        },
-        {
-          "id": "09-04",
-          "name_en": "Hotel Stay (per night, 3-star)",
-          "name_ar": "إقامة فندقية (لكل ليلة، 3 نجوم)",
-          "price_aed": 380,
-          "mom_change": 1.5,
-          "yoy_change": 5.5,
-          "weight": 1.0,
-          "selected": false
-        }
+        { "id": "09-01", "name_en": "Cinema Ticket", "name_ar": "تذكرة سينما", "price_aed": 50, "mom_change": 0.2, "yoy_change": 2.0, "weight": 0.6, "selected": true },
+        { "id": "09-02", "name_en": "Gym Membership (monthly)", "name_ar": "اشتراك صالة رياضية (شهرياً)", "price_aed": 300, "mom_change": 0.3, "yoy_change": 2.8, "weight": 1.0, "selected": true },
+        { "id": "09-03", "name_en": "Books & Magazines (monthly)", "name_ar": "كتب ومجلات (شهرياً)", "price_aed": 80, "mom_change": 0.2, "yoy_change": 1.5, "weight": 0.66, "selected": true },
+        { "id": "09-04", "name_en": "Hotel Stay (per night, 3-star)", "name_ar": "إقامة فندقية (لليلة، 3 نجوم)", "price_aed": 400, "mom_change": 0.6, "yoy_change": 5.5, "weight": 1.0, "selected": true }
       ]
     },
     {
@@ -473,122 +121,41 @@
       "name_ar": "التعليم",
       "weight": 7.33,
       "items": [
-        {
-          "id": "10-01",
-          "name_en": "School Fees (monthly, private)",
-          "name_ar": "رسوم مدرسية (شهري، خاص)",
-          "price_aed": 2500,
-          "mom_change": 0.0,
-          "yoy_change": 4.9,
-          "weight": 5.5,
-          "selected": false
-        },
-        {
-          "id": "10-02",
-          "name_en": "University Tuition (monthly avg)",
-          "name_ar": "رسوم جامعية (متوسط شهري)",
-          "price_aed": 5500,
-          "mom_change": 0.0,
-          "yoy_change": 3.8,
-          "weight": 1.83,
-          "selected": false
-        }
+        { "id": "10-01", "name_en": "School Fees (monthly, private)", "name_ar": "رسوم مدرسية (شهرياً، خاص)", "price_aed": 3000, "mom_change": 0.5, "yoy_change": 4.9, "weight": 5.5, "selected": true },
+        { "id": "10-02", "name_en": "University Tuition (monthly avg)", "name_ar": "رسوم جامعية (متوسط شهري)", "price_aed": 4000, "mom_change": 0.4, "yoy_change": 3.8, "weight": 1.83, "selected": true }
       ]
     },
     {
       "id": "11",
-      "name_en": "Restaurants & Hotels",
-      "name_ar": "المطاعم والفنادق",
+      "name_en": "Restaurants and accommodation services",
+      "name_ar": "المطاعم وخدمات الإقامة",
       "weight": 9.55,
       "items": [
-        {
-          "id": "11-01",
-          "name_en": "Restaurant Meal (per person)",
-          "name_ar": "وجبة مطعم (للفرد)",
-          "price_aed": 80,
-          "mom_change": 0.4,
-          "yoy_change": 3.1,
-          "weight": 3.5,
-          "selected": true
-        },
-        {
-          "id": "11-02",
-          "name_en": "Fast Food Meal",
-          "name_ar": "وجبة سريعة",
-          "price_aed": 35,
-          "mom_change": 0.5,
-          "yoy_change": 3.5,
-          "weight": 2.5,
-          "selected": true
-        },
-        {
-          "id": "11-03",
-          "name_en": "Coffee (café, medium)",
-          "name_ar": "قهوة (مقهى، وسط)",
-          "price_aed": 22,
-          "mom_change": 0.0,
-          "yoy_change": 2.2,
-          "weight": 1.8,
-          "selected": true
-        },
-        {
-          "id": "11-04",
-          "name_en": "Food Delivery (monthly)",
-          "name_ar": "توصيل طعام (شهري)",
-          "price_aed": 300,
-          "mom_change": 0.8,
-          "yoy_change": 4.0,
-          "weight": 1.75,
-          "selected": true
-        }
+        { "id": "11-01", "name_en": "Restaurant Meal (per person)", "name_ar": "وجبة في مطعم (للشخص)", "price_aed": 80, "mom_change": 0.3, "yoy_change": 3.1, "weight": 3.5, "selected": true },
+        { "id": "11-02", "name_en": "Fast Food Meal", "name_ar": "وجبة سريعة", "price_aed": 30, "mom_change": 0.4, "yoy_change": 3.5, "weight": 2.5, "selected": true },
+        { "id": "11-03", "name_en": "Coffee (café, medium)", "name_ar": "قهوة (مقهى، متوسط)", "price_aed": 22, "mom_change": 0.2, "yoy_change": 2.2, "weight": 1.8, "selected": true },
+        { "id": "11-04", "name_en": "Food Delivery (monthly)", "name_ar": "توصيل طعام (شهرياً)", "price_aed": 600, "mom_change": 0.5, "yoy_change": 4.0, "weight": 1.75, "selected": true }
       ]
     },
     {
       "id": "12",
-      "name_en": "Miscellaneous Goods & Services",
-      "name_ar": "السلع والخدمات المتنوعة",
-      "weight": 2.76,
+      "name_en": "Insurance and financial services",
+      "name_ar": "خدمات التأمين والخدمات المالية",
+      "weight": 2.46,
       "items": [
-        {
-          "id": "12-01",
-          "name_en": "Haircut (men's)",
-          "name_ar": "قص شعر (رجالي)",
-          "price_aed": 45,
-          "mom_change": 0.2,
-          "yoy_change": 2.5,
-          "weight": 0.6,
-          "selected": true
-        },
-        {
-          "id": "12-02",
-          "name_en": "Laundry Service (monthly)",
-          "name_ar": "خدمة الغسيل (شهري)",
-          "price_aed": 180,
-          "mom_change": 0.3,
-          "yoy_change": 3.0,
-          "weight": 0.8,
-          "selected": true
-        },
-        {
-          "id": "12-03",
-          "name_en": "Travel Insurance (annual/12)",
-          "name_ar": "تأمين سفر (سنوي/12)",
-          "price_aed": 55,
-          "mom_change": 0.5,
-          "yoy_change": 3.5,
-          "weight": 0.46,
-          "selected": false
-        },
-        {
-          "id": "12-04",
-          "name_en": "Personal Care Products (monthly)",
-          "name_ar": "منتجات العناية الشخصية (شهري)",
-          "price_aed": 150,
-          "mom_change": 0.3,
-          "yoy_change": 2.8,
-          "weight": 0.9,
-          "selected": true
-        }
+        { "id": "12-01", "name_en": "Car Insurance (annual/12)", "name_ar": "تأمين السيارة (سنوي/١٢)", "price_aed": 200, "mom_change": 0.3, "yoy_change": 4.1, "weight": 2.0, "selected": true },
+        { "id": "12-02", "name_en": "Travel Insurance (annual/12)", "name_ar": "تأمين السفر (سنوي/١٢)", "price_aed": 50, "mom_change": 0.2, "yoy_change": 3.5, "weight": 0.46, "selected": true }
+      ]
+    },
+    {
+      "id": "13",
+      "name_en": "Personal care, social protection and miscellaneous goods and services",
+      "name_ar": "العناية الشخصية والحماية الاجتماعية والسلع والخدمات المتنوعة",
+      "weight": 2.3,
+      "items": [
+        { "id": "13-01", "name_en": "Haircut (men's)", "name_ar": "حلاقة (رجالي)", "price_aed": 50, "mom_change": 0.2, "yoy_change": 2.5, "weight": 0.6, "selected": true },
+        { "id": "13-02", "name_en": "Laundry Service (monthly)", "name_ar": "خدمة غسيل الملابس (شهرياً)", "price_aed": 150, "mom_change": 0.3, "yoy_change": 3.0, "weight": 0.8, "selected": true },
+        { "id": "13-03", "name_en": "Personal Care Products (monthly)", "name_ar": "منتجات العناية الشخصية (شهرياً)", "price_aed": 200, "mom_change": 0.2, "yoy_change": 2.8, "weight": 0.9, "selected": true }
       ]
     }
   ]

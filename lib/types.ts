@@ -56,7 +56,7 @@ export interface NationalityAdjustment {
 }
 
 export interface TransportShape {
-  petrol: number; 'car-insurance': number; 'car-maint': number; taxi: number; metro: number;
+  petrol: number; 'car-maint': number; taxi: number; metro: number;
 }
 
 export interface Profiles {

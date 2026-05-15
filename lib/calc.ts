@@ -135,12 +135,13 @@ export function buildDivisionWeights(
 
 // ─── Task 5: item-level weights + YoY/MoM ───
 
+// COICOP 2018: car insurance moved out of Transport (div 07) into
+// Insurance & Financial Services (div 12); item 07-04 is now car maintenance.
 const TRANSPORT_ITEM_TO_SHAPE_KEY: Record<string, keyof TransportShape> = {
   '07-01': 'petrol',
   '07-02': 'taxi',
   '07-03': 'metro',
-  '07-04': 'car-insurance',
-  '07-05': 'car-maint',
+  '07-04': 'car-maint',
 };
 
 export function distributeItemWeights(

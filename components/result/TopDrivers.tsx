@@ -1,22 +1,25 @@
-import { BarChart2, Home, Car, UtensilsCrossed, Apple, Shirt, HeartPulse, Smartphone, GraduationCap, Wine, Sofa, Landmark } from 'lucide-react';
+import { BarChart2, Home, Car, UtensilsCrossed, Apple, Shirt, HeartPulse, Smartphone, GraduationCap, Cigarette, Music, Sofa, ShieldCheck, Sparkles } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
 import type { CpiResult } from '../../lib/types';
 import { formatPercent, formatNumber, formatCurrencyAed } from '../../lib/format';
 
 interface Props { result: CpiResult; incomeSkipped?: boolean; }
 
+// COICOP 2018: 13 divisions
 const DIV_ICON: Record<string, React.ReactNode> = {
-  '01': <Apple className="w-[18px] h-[18px]" />,
-  '02': <Wine className="w-[18px] h-[18px]" />,
-  '03': <Shirt className="w-[18px] h-[18px]" />,
-  '04': <Home className="w-[18px] h-[18px]" />,
-  '05': <Sofa className="w-[18px] h-[18px]" />,
-  '06': <HeartPulse className="w-[18px] h-[18px]" />,
-  '07': <Car className="w-[18px] h-[18px]" />,
-  '08': <Smartphone className="w-[18px] h-[18px]" />,
-  '10': <GraduationCap className="w-[18px] h-[18px]" />,
-  '11': <UtensilsCrossed className="w-[18px] h-[18px]" />,
-  '12': <Landmark className="w-[18px] h-[18px]" />,
+  '01': <Apple className="w-[18px] h-[18px]" />,            // Food and beverage
+  '02': <Cigarette className="w-[18px] h-[18px]" />,        // Tobacco
+  '03': <Shirt className="w-[18px] h-[18px]" />,            // Clothing and footwear
+  '04': <Home className="w-[18px] h-[18px]" />,             // Housing, water, electricity, gas
+  '05': <Sofa className="w-[18px] h-[18px]" />,             // Furnishings, household equipment
+  '06': <HeartPulse className="w-[18px] h-[18px]" />,       // Health
+  '07': <Car className="w-[18px] h-[18px]" />,              // Transport
+  '08': <Smartphone className="w-[18px] h-[18px]" />,       // Information and communication
+  '09': <Music className="w-[18px] h-[18px]" />,            // Recreation, sport and culture
+  '10': <GraduationCap className="w-[18px] h-[18px]" />,    // Education
+  '11': <UtensilsCrossed className="w-[18px] h-[18px]" />,  // Restaurants and accommodation
+  '12': <ShieldCheck className="w-[18px] h-[18px]" />,      // Insurance and financial services
+  '13': <Sparkles className="w-[18px] h-[18px]" />,         // Personal care + misc
 };
 
 export function TopDrivers({ result, incomeSkipped = false }: Props) {
