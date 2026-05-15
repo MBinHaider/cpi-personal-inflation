@@ -1,18 +1,18 @@
-import { useState, useEffect, useRef } from 'react';
-import { RotateCcw, Pencil, Share2, BarChart2, Gauge, GitCompareArrows, LineChart } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
-import monthlyData from '../../data/cpi-monthly.json';
+import {
+  Hero, ActionPlan, PrimaryActionCard, QuickWinsGrid, QuickWinCard,
+  DriversList, BenchmarksList, TrendChart, Methodology, AnswersChips,
+  ActionRow, PageTitle, Footer,
+} from '@shared/result-page';
+import type { ReactNode } from 'react';
+import { Lightbulb, Home, Car, Wifi, Smartphone, Shirt, Sparkles, Fuel, GraduationCap } from 'lucide-react';
 import type { CpiResult, QuizAnswers } from '../../lib/types';
-import { formatMonthYearLong, formatPercent, interpolate } from '../../lib/format';
-import { Hero } from './Hero';
-import { Methodology } from './Methodology';
-import { AnswersChips } from './AnswersChips';
-import { CollapsibleSection } from './CollapsibleSection';
+import { mapDrivers, mapBenchmarks, mapChips, mapMonthlyToDataPoints } from '../../lib/mapCpiToShared';
+import { deriveAffordabilityStatus } from '../../lib/affordabilityStatus';
+import { pickAnchorKey } from '../../lib/anchorSentence';
+import { formatCurrencyAed, formatPercent, formatMonthYearLong, formatNumber, interpolate } from '../../lib/format';
 import { GapDecomposition } from './GapDecomposition';
-import { TopDrivers } from './TopDrivers';
-import { AffordabilitySnapshot } from './AffordabilitySnapshot';
-import { Recommendations } from './Recommendations';
-import { TrendChart } from './TrendChart';
+import monthlyData from '../../data/cpi-monthly.json';
 
 interface Props {
   answers: QuizAnswers;
@@ -23,18 +23,49 @@ interface Props {
 
 const SHARE_URL = 'https://cpi-personal-inflation.vercel.app';
 
+const REC_ICON: Record<string, ReactNode> = {
+  'rent-very-high':       <Home className="w-4 h-4" />,
+  'internet-deflating':   <Wifi className="w-4 h-4" />,
+  'mobile-deflating':     <Smartphone className="w-4 h-4" />,
+  'clothing-deflating':   <Shirt className="w-4 h-4" />,
+  'petrol-fast-rising':   <Fuel className="w-4 h-4" />,
+  'private-school-major': <GraduationCap className="w-4 h-4" />,
+};
+
 export function ResultPage({ answers, result, onRetake, onEdit }: Props) {
   const { t, language } = useLanguage();
-  const [showCopied, setShowCopied] = useState(false);
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const incomeSkipped = answers.income === 'skipped';
+  const isPositive = result.difference >= 0;
+  const signedDelta = isPositive ? result.estMonthlyExtra : -result.estMonthlyExtra;
 
-  useEffect(() => {
-    return () => {
-      if (toastTimerRef.current !== null) {
-        clearTimeout(toastTimerRef.current);
-      }
-    };
-  }, []);
+  const heroLabel = incomeSkipped
+    ? t('result.hero.label')
+    : isPositive ? t('result.hero.aedLabel.positive') : t('result.hero.aedLabel.negative');
+  const primaryValue = incomeSkipped
+    ? formatPercent(result.personalYoy, language, 2, 'always')
+    : formatCurrencyAed(signedDelta, language, 'always');
+  const anchor = incomeSkipped ? undefined : (() => {
+    const k = pickAnchorKey(signedDelta);
+    return k ? t(k) : undefined;
+  })();
+  const status = deriveAffordabilityStatus(result.affordability);
+  const heroStatus = status.kind === 'noData' ? undefined : {
+    kind: status.kind,
+    label: status.kind === 'ok'
+      ? t('result.status.ok')
+      : interpolate(t(`result.status.${status.kind}.${status.metricKey ?? 'rent'}`), {
+          pct: formatPercent((status.pct ?? 0) * 100, language, 0, 'never'),
+        }),
+  } as const;
+  const comparison = incomeSkipped ? undefined : {
+    yours: { label: t('result.hero.yourRate'), value: formatPercent(result.personalYoy, language, 2, 'always') },
+    benchmark: { label: t('result.hero.dubaiAvg'), value: formatPercent(result.officialYoy, language, 2, 'always') },
+  };
+
+  const [primary, ...rest] = result.recommendations;
+  const quickWins = rest.slice(0, 3);
+
+  const trendData = mapMonthlyToDataPoints(monthlyData.months, result.personalYoy);
 
   const lastDate = (() => {
     const last = monthlyData.months[monthlyData.months.length - 1]?.date;
@@ -43,125 +74,109 @@ export function ResultPage({ answers, result, onRetake, onEdit }: Props) {
     return formatMonthYearLong(new Date(Number(y), Number(m) - 1, 1), language);
   })();
 
-  const handleShare = async () => {
-    const shareText = interpolate(t('result.share.text'), {
-      cpi: formatPercent(result.personalYoy, language),
-      official: formatPercent(result.officialYoy, language),
-      url: SHARE_URL,
-    });
-    const shareTitle = t('result.share.title');
-
-    if (typeof navigator.share === 'function') {
-      try {
-        await navigator.share({ title: shareTitle, text: shareText, url: SHARE_URL });
-      } catch (err) {
-        // AbortError = user cancelled — silent. Re-throw unexpected errors.
-        if (err instanceof Error && err.name !== 'AbortError') {
-          console.error('Share failed:', err);
-        }
-      }
-      return;
-    }
-
-    try {
-      await navigator.clipboard.writeText(shareText);
-    } catch {
-      // Clipboard not available — do nothing
-      return;
-    }
-
-    if (toastTimerRef.current !== null) {
-      clearTimeout(toastTimerRef.current);
-    }
-    setShowCopied(true);
-    toastTimerRef.current = setTimeout(() => {
-      setShowCopied(false);
-      toastTimerRef.current = null;
-    }, 2500);
-  };
   return (
-    <div className="flex flex-col gap-5">
-      {/* Page title — concise, plain language */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100 mb-1 tracking-tight">{t('result.title')}</h1>
-        <p className="text-sm text-gray-500 dark:text-gray-400">{t('result.sub')}</p>
-      </div>
+    <div className="px-4 sm:px-6 py-5 max-w-[900px] mx-auto bg-white">
+      <PageTitle title={t('result.title')} subtitle={t('result.sub')} />
 
-      {/* Hero — dramatic gradient + status pill + big AED + comparison */}
-      <Hero result={result} answers={answers} />
+      <Hero
+        status={heroStatus}
+        primaryLabel={heroLabel}
+        primaryValue={primaryValue}
+        anchor={anchor}
+        comparison={comparison}
+      />
 
-      {/* Recommendations — primary action + quick wins */}
-      <Recommendations result={result} />
+      {primary && (
+        <ActionPlan
+          title={t('result.rec.title')}
+          primary={
+            <PrimaryActionCard
+              icon={REC_ICON[primary.id] ?? <Lightbulb className="w-4 h-4" />}
+              tagLabel={t('result.recs.tag.major')}
+              title={primary.title}
+              why={primary.why}
+              savingLabel={primary.savingLow > 0
+                ? interpolate(t('result.rec.saving'), { low: formatNumber(primary.savingLow, language), high: formatNumber(primary.savingHigh, language) })
+                : undefined}
+            />
+          }
+          quickWins={quickWins.length > 0 ? (
+            <QuickWinsGrid title={t('result.recs.quickWinsTitle')}>
+              {quickWins.map(r => (
+                <QuickWinCard
+                  key={r.id}
+                  icon={REC_ICON[r.id] ?? <Sparkles className="w-4 h-4" />}
+                  title={r.title}
+                  savingLabel={r.savingLow > 0 ? interpolate(t('result.rec.saving'), {
+                    low: formatNumber(r.savingLow, language), high: formatNumber(r.savingHigh, language)
+                  }) : undefined}
+                />
+              ))}
+            </QuickWinsGrid>
+          ) : undefined}
+        />
+      )}
 
-      {/* Analytical sections — collapsed by default for naive users */}
-      <CollapsibleSection
+      <DriversList
         title={t('result.drivers.title')}
-        icon={<BarChart2 className="w-4 h-4" />}
-        summary={t('result.drivers.sub')}
-      >
-        <TopDrivers result={result} incomeSkipped={answers.income === 'skipped'} />
-      </CollapsibleSection>
+        metaLine={t('result.drivers.sub')}
+        drivers={mapDrivers(result, answers, t, language)}
+      />
 
-      <CollapsibleSection
+      <BenchmarksList
         title={t('result.afford.title')}
-        icon={<Gauge className="w-4 h-4" />}
-        summary={t('result.afford.sub')}
-      >
-        <AffordabilitySnapshot result={result} onEdit={onEdit} />
-      </CollapsibleSection>
+        benchmarks={mapBenchmarks(result, t, language)}
+      />
 
-      <CollapsibleSection
-        title={t('result.decomp.title')}
-        icon={<GitCompareArrows className="w-4 h-4" />}
-        summary={t('result.decomp.sub')}
-      >
-        <GapDecomposition result={result} />
-      </CollapsibleSection>
+      <GapDecomposition result={result} />
 
-      <CollapsibleSection
+      <TrendChart
         title={t('result.trend.title')}
-        icon={<LineChart className="w-4 h-4" />}
-        summary={t('result.trend.sub')}
-      >
-        <TrendChart personalYoy={result.personalYoy} />
-      </CollapsibleSection>
+        data={trendData}
+        direction="backward"
+        yAxisFormatter={v => formatPercent(v, language, 1, 'never')}
+        yourLabel={t('result.trend.yours')}
+        benchmarkLabel={t('result.trend.official')}
+      />
 
-      {/* Methodology disclosure — "How this is calculated" */}
-      <Methodology />
+      <Methodology
+        toggleLabel={t('result.methodology.toggle')}
+        title={t('result.methodology.title')}
+        formula={t('result.methodology.formula')}
+        layers={[
+          { label: t('result.methodology.layer1.label'), body: t('result.methodology.layer1.body') },
+          { label: t('result.methodology.layer2.label'), body: t('result.methodology.layer2.body') },
+          { label: t('result.methodology.layer3.label'), body: t('result.methodology.layer3.body') },
+        ]}
+        caveat={t('result.methodology.estimateCaveat')}
+      />
 
-      {/* Answer chips at the bottom — "Based on: ..." summary, still clickable */}
-      <div className="mt-3">
-        <div className="text-xs uppercase tracking-wider text-gray-500 dark:text-gray-400 font-semibold mb-2">
-          {t('result.basedOn')}
-        </div>
-        <AnswersChips answers={answers} onEdit={onEdit} />
-      </div>
+      <AnswersChips
+        basedOnLabel={t('result.basedOn')}
+        editAriaLabel={(label) => interpolate(t('result.chip.editAria'), { label })}
+        chips={mapChips(answers, t, onEdit)}
+      />
 
-      {/* Action row */}
-      <div className="flex flex-col items-center gap-1.5 pt-3">
-        <div className="flex gap-2.5 justify-center flex-wrap">
-          <button onClick={onRetake} className="text-xs px-3.5 py-2 border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg inline-flex items-center gap-1.5 hover:border-[#0066cc] hover:text-[#0066cc]">
-            <RotateCcw className="w-3.5 h-3.5" /> {t('result.cta.retake')}
-          </button>
-          <button onClick={() => onEdit()} className="text-xs px-3.5 py-2 border border-gray-200 dark:border-slate-600 bg-white dark:bg-slate-700 rounded-lg inline-flex items-center gap-1.5 hover:border-[#0066cc] hover:text-[#0066cc]">
-            <Pencil className="w-3.5 h-3.5" /> {t('result.cta.edit')}
-          </button>
-          <button className="text-xs px-3.5 py-2 bg-[#0066cc] text-white border border-[#0066cc] rounded-lg inline-flex items-center gap-1.5 hover:bg-[#0052a3]" onClick={handleShare}>
-            <Share2 className="w-3.5 h-3.5" /> {t('result.cta.share')}
-          </button>
-        </div>
-        {showCopied && (
-          <span className="text-[11px] text-green-600 dark:text-green-400 transition-opacity duration-200 ease-out">
-            {t('result.share.copied')}
-          </span>
-        )}
-      </div>
+      <ActionRow
+        retakeLabel={t('result.cta.retake')}
+        editLabel={t('result.cta.edit')}
+        shareLabel={t('result.cta.share')}
+        copiedLabel={t('result.share.copied')}
+        onRetake={onRetake}
+        onEdit={() => onEdit()}
+        shareTitle={t('result.share.title')}
+        shareText={interpolate(t('result.share.text'), {
+          cpi: formatPercent(result.personalYoy, language),
+          official: formatPercent(result.officialYoy, language),
+          url: SHARE_URL,
+        })}
+        shareUrl={SHARE_URL}
+      />
 
-      {/* Footer */}
-      <div className="border-t border-gray-200 dark:border-slate-700 pt-4 text-[11px] text-gray-500 dark:text-gray-400 flex justify-between flex-wrap gap-2">
-        <span>{t('result.footer.source')}</span>
-        <span>{t('result.footer.updated').replace('{month}', lastDate)}</span>
-      </div>
+      <Footer
+        source={t('result.footer.source')}
+        updatedLabel={interpolate(t('result.footer.updated'), { month: lastDate })}
+      />
     </div>
   );
 }
