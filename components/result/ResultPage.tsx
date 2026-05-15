@@ -5,6 +5,7 @@ import monthlyData from '../../data/cpi-monthly.json';
 import type { CpiResult, QuizAnswers } from '../../lib/types';
 import { formatMonthYearLong, formatPercent, interpolate } from '../../lib/format';
 import { Hero } from './Hero';
+import { Methodology } from './Methodology';
 import { AnswersChips } from './AnswersChips';
 import { CollapsibleSection } from './CollapsibleSection';
 import { GapDecomposition } from './GapDecomposition';
@@ -124,6 +125,9 @@ export function ResultPage({ answers, result, onRetake, onEdit }: Props) {
       >
         <TrendChart personalYoy={result.personalYoy} />
       </CollapsibleSection>
+
+      {/* Methodology disclosure — "How this is calculated" */}
+      <Methodology />
 
       {/* Answer chips at the bottom — "Based on: ..." summary, still clickable */}
       <div className="mt-3">
