@@ -5,7 +5,6 @@ import monthlyData from '../../data/cpi-monthly.json';
 import type { CpiResult, QuizAnswers } from '../../lib/types';
 import { formatMonthYearLong, formatPercent, interpolate } from '../../lib/format';
 import { Hero } from './Hero';
-import { StatusBanner } from './StatusBanner';
 import { AnswersChips } from './AnswersChips';
 import { CollapsibleSection } from './CollapsibleSection';
 import { GapDecomposition } from './GapDecomposition';
@@ -87,10 +86,7 @@ export function ResultPage({ answers, result, onRetake, onEdit }: Props) {
         <p className="text-sm text-gray-500 dark:text-gray-400">{t('result.sub')}</p>
       </div>
 
-      {/* Status banner — full-width, color-coded "should I worry?" */}
-      <StatusBanner result={result} />
-
-      {/* Hero — single big AED number + anchor sentence */}
+      {/* Hero — dramatic gradient + status pill + big AED + comparison */}
       <Hero result={result} answers={answers} />
 
       {/* Recommendations — primary action + quick wins */}

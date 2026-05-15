@@ -54,7 +54,7 @@ export function Recommendations({ result }: Props) {
 function PrimaryActionCard({ rec, t, language }: { rec: Recommendation; t: (k: string) => string; language: 'en' | 'ar' }) {
   const isInfo = rec.savingLow === 0 && rec.savingHigh === 0;
   return (
-    <div className="relative bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/15 dark:to-orange-900/15 border-2 border-amber-200 dark:border-amber-900/40 rounded-2xl p-5 sm:p-6">
+    <div className="relative bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/15 dark:to-orange-900/15 border-2 border-amber-200 dark:border-amber-900/40 rounded-2xl p-5 sm:p-6 transition-all hover:shadow-lg hover:-translate-y-0.5 duration-200">
       <div className="flex items-start gap-4">
         <div className="w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm">
           {iconFor(rec)}
@@ -100,7 +100,7 @@ function QuickWinsRow({ recs, t, language }: { recs: Recommendation[]; t: (k: st
 function QuickWinCard({ rec, t, language }: { rec: Recommendation; t: (k: string) => string; language: 'en' | 'ar' }) {
   const isInfo = rec.savingLow === 0 && rec.savingHigh === 0;
   return (
-    <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-4 hover:border-[#0066cc] transition-colors">
+    <div className="bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-4 hover:border-[#0066cc] hover:-translate-y-0.5 hover:shadow-md transition-all duration-200">
       <div className="flex items-start gap-3">
         <div className="w-9 h-9 rounded-lg bg-[#e8f2ff] dark:bg-[#0066cc]/20 text-[#0066cc] dark:text-blue-300 flex items-center justify-center shrink-0">
           {iconFor(rec)}
