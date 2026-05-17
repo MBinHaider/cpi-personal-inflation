@@ -72,7 +72,7 @@ export function CpiInteractive() {
 
   return (
     <PageShell>
-      <Header title="CPI Interactive" subtitle="Dubai" />
+      <Header appName="Inflation Lens" appType="CPI" glyph="inflation" />
       <div className="px-6 pb-10 pt-2 max-w-[1100px] mx-auto">
         {view === 'welcome' && <Welcome onStart={handleStart} />}
         {view === 'wizard' && (
