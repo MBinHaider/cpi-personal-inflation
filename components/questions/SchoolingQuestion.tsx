@@ -1,43 +1,45 @@
 import { School, GraduationCap, BookOpenCheck } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
-import { QuestionScreen } from '../QuestionScreen';
-import { CardGrid, type CardOption } from './CardGrid';
+import { QuizShell, CardGrid } from '@shared/quiz';
 import type { Schooling, Nationality } from '../../lib/types';
 
 interface Props {
+  progressPct: number;
   stepIndex: number;
   stepCount: number;
   nationality: Nationality;
   value?: Schooling;
   onAnswer: (v: Schooling) => void;
-  onBack: () => void;
+  onBack?: () => void;
 }
 
-export function SchoolingQuestion({ stepIndex, stepCount, nationality, value, onAnswer, onBack }: Props) {
+export function SchoolingQuestion({
+  progressPct, stepIndex, stepCount, nationality, value, onAnswer, onBack,
+}: Props) {
   const { t } = useLanguage();
   const isEmirati = nationality === 'emirati';
 
-  const options: CardOption[] = [
-    { value: 'public',     icon: <School className="w-5 h-5" />,         label: t('q7.public.label'),     sub: isEmirati ? t('q7.emirati.public.sub')     : t('q7.expat.public.sub') },
-    { value: 'private',    icon: <GraduationCap className="w-5 h-5" />,  label: t('q7.private.label'),    sub: isEmirati ? t('q7.emirati.private.sub')    : t('q7.expat.private.sub') },
-    { value: 'university', icon: <BookOpenCheck className="w-5 h-5" />,  label: t('q7.university.label'), sub: isEmirati ? t('q7.emirati.university.sub') : t('q7.expat.university.sub') },
-  ];
-
   return (
-    <QuestionScreen
-      stepIndex={stepIndex}
-      stepCount={stepCount}
-
+    <QuizShell
+      progressPct={progressPct}
+      caption={`${t('quiz.questionLabel')} ${stepIndex + 1} ${t('quiz.of')} ${stepCount}`}
       title={t('q7.title')}
       sub={isEmirati ? t('q7.emirati.sub') : t('q7.expat.sub')}
       onBack={onBack}
-      onNext={value ? () => onAnswer(value) : undefined}
-      nextDisabled={!value}
-      nextLabel={t('common.seeResult')}
-      skipLabel={t('q7.skip')}
-      onSkip={() => onAnswer('none')}
+      onContinue={() => value && value !== 'none' && onAnswer(value)}
+      continueLabel={t('common.seeResult')}
+      continueDisabled={!value || value === 'none'}
     >
-      <CardGrid options={options} cols={3} selectedValue={value === 'none' ? undefined : value} onSelect={v => onAnswer(v as Schooling)} />
-    </QuestionScreen>
+      <CardGrid
+        columns={2}
+        value={value === 'none' ? undefined : value}
+        onChange={(id) => onAnswer(id as Schooling)}
+        options={[
+          { id: 'public',     icon: <School className="w-6 h-6" />,        label: t('q7.public.label'),     sub: isEmirati ? t('q7.emirati.public.sub')     : t('q7.expat.public.sub') },
+          { id: 'private',    icon: <GraduationCap className="w-6 h-6" />, label: t('q7.private.label'),    sub: isEmirati ? t('q7.emirati.private.sub')    : t('q7.expat.private.sub') },
+          { id: 'university', icon: <BookOpenCheck className="w-6 h-6" />, label: t('q7.university.label'), sub: isEmirati ? t('q7.emirati.university.sub') : t('q7.expat.university.sub') },
+        ]}
+      />
+    </QuizShell>
   );
 }

@@ -14,6 +14,10 @@ export const cpiInteractiveTranslations = {
     // Wizard step header
     'wizard.questionLabel': 'Question {n}',
 
+    // ─── Quiz framing ───
+    'quiz.questionLabel': 'QUESTION',
+    'quiz.of': 'OF',
+
     // Generic
     'common.next': 'Next',
     'common.back': 'Back',
@@ -270,6 +274,10 @@ export const cpiInteractiveTranslations = {
 
     // Wizard step header
     'wizard.questionLabel': 'السؤال {n}',
+
+    // ─── Quiz framing ───
+    'quiz.questionLabel': 'سؤال',
+    'quiz.of': 'من',
 
     'common.next': 'التالي',
     'common.back': 'السابق',

@@ -1,18 +1,17 @@
 import { useState } from 'react';
 import { Home, Landmark, KeyRound, Banknote } from 'lucide-react';
 import { useLanguage } from '@shared/contexts/LanguageContext';
-import { QuestionScreen } from '../QuestionScreen';
-import { CardGrid, type CardOption } from './CardGrid';
-import { RangeGrid } from './RangeGrid';
+import { QuizShell, CardGrid, PillList } from '@shared/quiz';
 import type { Housing, Nationality, RentBracket, EmiratiHousingKind } from '../../lib/types';
 
 interface Props {
+  progressPct: number;
   stepIndex: number;
   stepCount: number;
   nationality: Nationality;
   value?: Housing;
-  onAnswer: (value: Housing) => void;
-  onBack: () => void;
+  onAnswer: (v: Housing) => void;
+  onBack?: () => void;
 }
 
 const RENT_BRACKETS: Array<{ value: RentBracket; tKey: string }> = [
@@ -24,89 +23,95 @@ const RENT_BRACKETS: Array<{ value: RentBracket; tKey: string }> = [
   { value: '30k+',   tKey: 'q3.bracket.30k+' },
 ];
 
-export function HousingQuestion({ stepIndex, stepCount, nationality, value, onAnswer, onBack }: Props) {
+export function HousingQuestion({
+  progressPct, stepIndex, stepCount, nationality, value, onAnswer, onBack,
+}: Props) {
   const { t } = useLanguage();
-  // For Emirati branch: if 'rent' picked, show the same rent-bracket pad as expat
+  // For Emirati branch: track which kind has been picked so we can show the rent sub-step.
   const [emiratiKind, setEmiratiKind] = useState<EmiratiHousingKind | undefined>(
-    value?.branch === 'emirati' ? value.kind : undefined
+    value?.branch === 'emirati' ? value.kind : undefined,
   );
-
-  const submit = (housing: Housing) => onAnswer(housing);
+  const caption = `${t('quiz.questionLabel')} ${stepIndex + 1} ${t('quiz.of')} ${stepCount}`;
 
   if (nationality === 'emirati') {
-    const kindOptions: CardOption[] = [
-      { value: 'family-home',  icon: <Home className="w-5 h-5" />,        label: t('q3.emirati.family-home.label'),  sub: t('q3.emirati.family-home.sub') },
-      { value: 'gov-grant',    icon: <Landmark className="w-5 h-5" />,    label: t('q3.emirati.gov-grant.label'),    sub: t('q3.emirati.gov-grant.sub') },
-      { value: 'own-mortgage', icon: <KeyRound className="w-5 h-5" />,    label: t('q3.emirati.own-mortgage.label'), sub: t('q3.emirati.own-mortgage.sub') },
-      { value: 'rent',         icon: <Banknote className="w-5 h-5" />,    label: t('q3.emirati.rent.label'),         sub: t('q3.emirati.rent.sub') },
-    ];
-
+    // Sub-step: rent bracket picker (only when the Emirati picked 'rent')
     if (emiratiKind === 'rent') {
-      const rentValue = value?.branch === 'emirati' && value.rentBracket ? value.rentBracket : undefined;
+      const rentValue = value?.branch === 'emirati' ? value.rentBracket : undefined;
       return (
-        <QuestionScreen
-          stepIndex={stepIndex}
-          stepCount={stepCount}
+        <QuizShell
+          progressPct={progressPct}
+          caption={caption}
           title={t('q3.expat.title')}
           sub={t('q3.expat.sub')}
           onBack={() => setEmiratiKind(undefined)}
-          onNext={rentValue ? () => submit({ branch: 'emirati', kind: 'rent', rentBracket: rentValue }) : undefined}
-          nextDisabled={!rentValue}
+          onContinue={() => rentValue && onAnswer({ branch: 'emirati', kind: 'rent', rentBracket: rentValue })}
+          continueDisabled={!rentValue}
         >
-          <RangeGrid
-            options={RENT_BRACKETS.map(b => ({ value: b.value, label: t(b.tKey) }))}
-            currency="AED"
-            selectedValue={rentValue}
-            onSelect={v => submit({ branch: 'emirati', kind: 'rent', rentBracket: v as RentBracket })}
+          <PillList
+            columns={3}
+            value={rentValue}
+            onChange={(id) => id && onAnswer({ branch: 'emirati', kind: 'rent', rentBracket: id as RentBracket })}
+            options={RENT_BRACKETS.map(b => ({ id: b.value, label: t(b.tKey) }))}
           />
-        </QuestionScreen>
+        </QuizShell>
       );
     }
 
+    // Primary step: housing kind picker for Emirati
     return (
-      <QuestionScreen
-        stepIndex={stepIndex}
-        stepCount={stepCount}
+      <QuizShell
+        progressPct={progressPct}
+        caption={caption}
         title={t('q3.emirati.title')}
         sub={t('q3.emirati.sub')}
         onBack={onBack}
-        onNext={emiratiKind && emiratiKind !== 'rent' ? () => submit({ branch: 'emirati', kind: emiratiKind }) : undefined}
-        nextDisabled={!emiratiKind || emiratiKind === 'rent'}
+        onContinue={() => emiratiKind && onAnswer({ branch: 'emirati', kind: emiratiKind })}
+        continueDisabled={!emiratiKind}
       >
         <CardGrid
-          options={kindOptions}
-          cols={2}
-          selectedValue={emiratiKind}
-          onSelect={v => {
-            const k = v as EmiratiHousingKind;
+          columns={1}
+          value={emiratiKind}
+          onChange={(id) => {
+            const k = id as EmiratiHousingKind;
             setEmiratiKind(k);
-            if (k !== 'rent') submit({ branch: 'emirati', kind: k });
+            if (k !== 'rent') onAnswer({ branch: 'emirati', kind: k });
           }}
+          options={[
+            { id: 'family-home',  icon: <Home className="w-6 h-6" />,     label: t('q3.emirati.family-home.label'),  sub: t('q3.emirati.family-home.sub') },
+            { id: 'gov-grant',    icon: <Landmark className="w-6 h-6" />, label: t('q3.emirati.gov-grant.label'),    sub: t('q3.emirati.gov-grant.sub') },
+            { id: 'own-mortgage', icon: <KeyRound className="w-6 h-6" />, label: t('q3.emirati.own-mortgage.label'), sub: t('q3.emirati.own-mortgage.sub') },
+            { id: 'rent',         icon: <Banknote className="w-6 h-6" />, label: t('q3.emirati.rent.label'),         sub: t('q3.emirati.rent.sub') },
+          ]}
         />
-      </QuestionScreen>
+      </QuizShell>
     );
   }
 
-  // Expat branch
-  const rentValue = value?.branch === 'expat' && value.rentBracket ? value.rentBracket : undefined;
+  // Expat branch: rent bracket picker with a skip pill for own-no-mortgage.
+  const rentValue = value?.branch === 'expat' ? value.rentBracket : undefined;
   return (
-    <QuestionScreen
-      stepIndex={stepIndex}
-      stepCount={stepCount}
+    <QuizShell
+      progressPct={progressPct}
+      caption={caption}
       title={t('q3.expat.title')}
       sub={t('q3.expat.sub')}
       onBack={onBack}
-      onNext={rentValue ? () => submit({ branch: 'expat', kind: 'rent', rentBracket: rentValue }) : undefined}
-      nextDisabled={!rentValue}
-      skipLabel={t('q3.expat.skip')}
-      onSkip={() => submit({ branch: 'expat', kind: 'own-no-mortgage' })}
+      onContinue={() => rentValue && onAnswer({ branch: 'expat', kind: 'rent', rentBracket: rentValue })}
+      continueDisabled={!rentValue}
     >
-      <RangeGrid
-        options={RENT_BRACKETS.map(b => ({ value: b.value, label: t(b.tKey) }))}
-        currency="AED"
-        selectedValue={rentValue}
-        onSelect={v => submit({ branch: 'expat', kind: 'rent', rentBracket: v as RentBracket })}
+      <PillList
+        columns={3}
+        value={rentValue}
+        skipLabel={t('q3.expat.skip')}
+        onChange={(id) => {
+          if (id === null) {
+            onAnswer({ branch: 'expat', kind: 'own-no-mortgage' });
+          } else {
+            onAnswer({ branch: 'expat', kind: 'rent', rentBracket: id as RentBracket });
+          }
+        }}
+        options={RENT_BRACKETS.map(b => ({ id: b.value, label: t(b.tKey) }))}
       />
-    </QuestionScreen>
+    </QuizShell>
   );
 }

@@ -17,7 +17,7 @@ interface Props {
 }
 
 export function Wizard({ onComplete, startStep, startStepKey }: Props) {
-  const { state, dispatch, steps, isComplete } = useQuizState();
+  const { state, dispatch, steps, stepCount, progressPct, isComplete } = useQuizState();
   const { language } = useLanguage();
 
   // Latch: if isComplete was already true when the wizard mounted (e.g. the
@@ -58,13 +58,13 @@ export function Wizard({ onComplete, startStep, startStepKey }: Props) {
 
   const stepIndex = Math.min(state.step, steps.length - 1);
   const stepKey = steps[stepIndex];
-  const stepCount = steps.length;
   const back = () => dispatch({ type: 'back' });
 
   switch (stepKey) {
     case 'nationality':
       return (
         <NationalityQuestion
+          progressPct={progressPct}
           stepIndex={stepIndex} stepCount={stepCount}
           value={state.answers.nationality}
           onAnswer={v => dispatch({ type: 'answer', key: 'nationality', value: v })}
@@ -73,6 +73,7 @@ export function Wizard({ onComplete, startStep, startStepKey }: Props) {
     case 'income':
       return (
         <IncomeQuestion
+          progressPct={progressPct}
           stepIndex={stepIndex} stepCount={stepCount}
           value={state.answers.income}
           onAnswer={v => dispatch({ type: 'answer', key: 'income', value: v })}
@@ -82,6 +83,7 @@ export function Wizard({ onComplete, startStep, startStepKey }: Props) {
     case 'housing':
       return (
         <HousingQuestion
+          progressPct={progressPct}
           stepIndex={stepIndex} stepCount={stepCount}
           nationality={state.answers.nationality ?? 'expat'}
           value={state.answers.housing}
@@ -92,6 +94,7 @@ export function Wizard({ onComplete, startStep, startStepKey }: Props) {
     case 'household':
       return (
         <HouseholdQuestion
+          progressPct={progressPct}
           stepIndex={stepIndex} stepCount={stepCount}
           value={state.answers.household}
           onAnswer={v => dispatch({ type: 'answer', key: 'household', value: v })}
@@ -101,6 +104,7 @@ export function Wizard({ onComplete, startStep, startStepKey }: Props) {
     case 'transport':
       return (
         <TransportQuestion
+          progressPct={progressPct}
           stepIndex={stepIndex} stepCount={stepCount}
           value={state.answers.transport}
           onAnswer={v => dispatch({ type: 'answer', key: 'transport', value: v })}
@@ -110,6 +114,7 @@ export function Wizard({ onComplete, startStep, startStepKey }: Props) {
     case 'eatingOut':
       return (
         <EatingOutQuestion
+          progressPct={progressPct}
           stepIndex={stepIndex} stepCount={stepCount}
           value={state.answers.eatingOut}
           onAnswer={v => dispatch({ type: 'answer', key: 'eatingOut', value: v })}
@@ -119,6 +124,7 @@ export function Wizard({ onComplete, startStep, startStepKey }: Props) {
     case 'schooling':
       return (
         <SchoolingQuestion
+          progressPct={progressPct}
           stepIndex={stepIndex} stepCount={stepCount}
           nationality={state.answers.nationality ?? 'expat'}
           value={state.answers.schooling}

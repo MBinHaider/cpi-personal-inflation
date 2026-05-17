@@ -1,47 +1,40 @@
 import { useLanguage } from '@shared/contexts/LanguageContext';
-import { QuestionScreen } from '../QuestionScreen';
-import { RangeGrid } from './RangeGrid';
+import { QuizShell, PillList } from '@shared/quiz';
 import type { IncomeBracket } from '../../lib/types';
 
 interface Props {
+  progressPct: number;
   stepIndex: number;
   stepCount: number;
   value?: IncomeBracket;
-  onAnswer: (value: IncomeBracket) => void;
-  onBack: () => void;
+  onAnswer: (v: IncomeBracket) => void;
+  onBack?: () => void;
 }
 
-const BRACKETS: Array<{ value: Exclude<IncomeBracket, 'skipped'>; tKey: string }> = [
-  { value: 'u10k',    tKey: 'q2.bracket.u10k' },
-  { value: '10-20k',  tKey: 'q2.bracket.10-20k' },
-  { value: '20-40k',  tKey: 'q2.bracket.20-40k' },
-  { value: '40-80k',  tKey: 'q2.bracket.40-80k' },
-  { value: '80-150k', tKey: 'q2.bracket.80-150k' },
-  { value: '150k+',   tKey: 'q2.bracket.150k+' },
-];
+const BRACKETS: Exclude<IncomeBracket, 'skipped'>[] =
+  ['u10k', '10-20k', '20-40k', '40-80k', '80-150k', '150k+'];
 
-export function IncomeQuestion({ stepIndex, stepCount, value, onAnswer, onBack }: Props) {
+export function IncomeQuestion({
+  progressPct, stepIndex, stepCount, value, onAnswer, onBack,
+}: Props) {
   const { t } = useLanguage();
-  const options = BRACKETS.map(b => ({ value: b.value, label: t(b.tKey) }));
   return (
-    <QuestionScreen
-      stepIndex={stepIndex}
-      stepCount={stepCount}
-
+    <QuizShell
+      progressPct={progressPct}
+      caption={`${t('quiz.questionLabel')} ${stepIndex + 1} ${t('quiz.of')} ${stepCount}`}
       title={t('q2.title')}
       sub={t('q2.sub')}
       onBack={onBack}
-      onNext={value && value !== 'skipped' ? () => onAnswer(value) : undefined}
-      nextDisabled={!value || value === 'skipped'}
-      skipLabel={t('q2.skip')}
-      onSkip={() => onAnswer('skipped')}
+      onContinue={() => value && onAnswer(value)}
+      continueDisabled={!value}
     >
-      <RangeGrid
-        options={options}
-        currency="AED"
-        selectedValue={value === 'skipped' ? undefined : value}
-        onSelect={v => onAnswer(v as IncomeBracket)}
+      <PillList
+        columns={3}
+        value={value === 'skipped' ? undefined : value}
+        onChange={(id) => onAnswer((id ?? 'skipped') as IncomeBracket)}
+        skipLabel={t('q2.skip')}
+        options={BRACKETS.map((b) => ({ id: b, label: t(`q2.bracket.${b}`) }))}
       />
-    </QuestionScreen>
+    </QuizShell>
   );
 }

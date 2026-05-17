@@ -27,7 +27,11 @@ export function useQuizState() {
   }, [state]);
 
   const steps = useMemo(() => activeSteps(state.answers), [state.answers]);
+  const stepCount = steps.length;
+  const progressPct = stepCount > 0
+    ? Math.min(100, Math.max(0, (state.step / stepCount) * 100))
+    : 0;
   const isComplete = isQuizComplete(state);
 
-  return { state, dispatch, steps, isComplete };
+  return { state, dispatch, steps, stepCount, progressPct, isComplete };
 }
