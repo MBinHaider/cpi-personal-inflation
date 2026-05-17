@@ -55,9 +55,9 @@ export function TrendChart({
 
   return (
     <section className="mt-6">
-      <div className="flex items-center gap-2 mb-2.5">
-        <LineChartIcon className="w-4 h-4 text-[#0066cc]" aria-hidden="true" />
-        <h3 className="text-[13px] font-bold text-gray-900 flex-1">{title}</h3>
+      <div className="flex flex-wrap items-center gap-2 mb-2.5">
+        <LineChartIcon className="w-4 h-4 text-[#0066cc] shrink-0" aria-hidden="true" />
+        <h3 className="text-[13px] font-bold text-gray-900 flex-1 min-w-0">{title}</h3>
         {showPeriodFilter && (
           <div className="inline-flex bg-gray-100 rounded-md p-0.5 gap-0.5">
             {PERIODS.map(p => (
@@ -127,7 +127,6 @@ export function TrendChart({
           )}
         </div>
       </div>
-      <span className="sr-only">{direction}</span>
     </section>
   );
 }
